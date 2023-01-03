@@ -1,8 +1,13 @@
-import { Image, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
+import { usePacking } from '../context/PackingSaleContext';
 
-export default function ProductCard({item}) {
+export default function ProductCard({_id, idProduct, descripcion, stock, peso, precioUnitario, sabor, cantidad, total, estado, onClick=()=>console.log("product card no tiene funcion"), cart, onLongPress}) {
+
+    const item = {_id, descripcion, stock, peso, precioUnitario, sabor}
+
+    const {qtyMiss} = usePacking()
 
     let [fontsLoaded] = useFonts({
         'Cairo-Regular': require('../../assets/fonts/Cairo-Regular.ttf'),
@@ -15,30 +20,27 @@ export default function ProductCard({item}) {
     }
 
   return (      
-    <View style={{flexDirection: 'row', paddingHorizontal: 20, marginVertical: 5}}>
-        <Image
-            source={require('../assets/mediatarde.png')}
-            style={styles.image}
-        />
-        <View style={{paddingStart: 5, paddingVertical: 5}}>
-            <View style={{flexDirection: 'row', marginBottom: 5, justifyContent: 'space-between', width: '72%'}}>
-                <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular'}}>#165DAS655ASD</Text>
-                <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold'}}>(35)</Text>
-            </View>
-            <View style={{flexDirection: 'row', marginBottom: 5, width: '72%', justifyContent: 'space-between', alignItems: 'flex-end'}}>
-                <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular'}}>Galleta Mediatardes {item}</Text>
-                <Text style={{fontSize: 14, fontFamily: 'Cairo-Bold'}}>$165.99</Text>
-            </View>
-            
-            
-        </View>
-    </View>
+      <Pressable style={{paddingVertical: 5, borderBottomColor: '#d9d9d9', borderBottomWidth: 1, backgroundColor: qtyMiss.includes(_id) ? '#d9d9d9' : '#fff'}} onPress={()=>onClick(item)} onLongPress={onLongPress} >
+          <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end'}}>
+              <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{descripcion || "undefined"} </Text>
+              <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: '#7F8487'}}>{peso?.cantidad || ""} {peso?.unidad || ""}</Text>
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>#{_id || idProduct || "undefined"}</Text>
+              <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: estado === "entregado" ? '#6BCB77' : '#F39D0B'}}>{estado || ""}</Text>
+          </View>
+          <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+              <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>sabor: {sabor || "undefined"}</Text>
+          </View>
+          <View style={{flexDirection: 'row', marginBottom: 5, justifyContent: 'space-between'}}>
+              <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>
+                {cart ? cantidad : stock} unidades
+                </Text>
+              <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: '#7F8487'}}>${cart ? total : precioUnitario}</Text>
+          </View>
+      </Pressable>
   )
 }
 
 const styles = StyleSheet.create({
-    image: {
-        width: 50,
-        height: 50
-    }
 })
