@@ -3,10 +3,13 @@ import axios from 'axios'
 import React, { useState, createContext, useEffect, useContext } from 'react'
 import { useDate } from '../hooks/useDate'
 import { useAlert } from './AlertContext'
+<<<<<<< HEAD
 const io = require('socket.io-client')
 
 const socket = io('http://10.0.2.2:3000')
 
+=======
+>>>>>>> c8f2924552065524a8ff292417d01086c4fd2bec
 
 export const PackingSaleContext = createContext({
 })
