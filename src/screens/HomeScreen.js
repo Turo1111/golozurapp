@@ -1,36 +1,21 @@
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, Dimensions, Pressable, FlatList, Modal } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
-import Icon2 from 'react-native-vector-icons/FontAwesome'
 import React from 'react'
-import { useFonts } from '@expo-google-fonts/inter';
-import { BarChart } from 'react-native-chart-kit';
-import { color } from 'react-native-reanimated';
-import MyBottomSheet from '../components/MyBottomSheet';
-import InputSelect from '../components/InputSelect';
-import InputListAdd from '../components/InputListAdd';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FeatherIcons from 'react-native-vector-icons/Feather'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import { ScrollView } from 'react-native-gesture-handler';
 import { Divider } from '@rneui/base';
+import { useAuth } from '../context/AuthContext';
 
 export default function HomeScreen({navigation}) {
 
-  const [open, setOpen] = React.useState(false)
-
-  const data = {
-    labels: ["Lunes", "Martes", "Miercoles", "Jueves", "Viernes", "Sabado"],
-    datasets: [
-      {
-        data: [20, 45, 28, 80, 99, 43]
-      }
-    ]
-  };
+  const {user} = useAuth()
 
   return (
     <SafeAreaView style={styles.content}>
         <View style={{flexDirection: 'row', padding: 15, justifyContent: 'space-between', alignItems: 'center'}}>
-          <Text style={{fontSize: 22, fontFamily: 'Cairo-Bold', color: '#7F8487' }} >Bienvenido, Sergio</Text> 
+          <Text style={{fontSize: 22, fontFamily: 'Cairo-Bold', color: '#7F8487' }} >Bienvenido, {user?.usuario}</Text> 
           <Icon name='notifications-outline' color='#7F8487' size={30} 
           />
         </View>

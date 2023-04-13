@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import  Icon from 'react-native-vector-icons/MaterialIcons'
 import { useFormik } from 'formik'
 
-export default function InputListAdd({data = [], onChangeData, eClose, width = 60}) {
+export default function InputListAdd({data = [], onChangeData, eClose, width = 60, editable = true}) {
 
   const [openList, setOpenList] = useState(false)
 
@@ -21,6 +21,7 @@ export default function InputListAdd({data = [], onChangeData, eClose, width = 6
         placeholder={data.length === 0 ? 'Telefono' : 
           data.toString()
         } 
+        editable={editable}
         style={[{ width: `${width}%` }, styles.input]} 
         value={formik.values.item}
         onChangeText={(text)=> formik.setFieldValue('item',text)}

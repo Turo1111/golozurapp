@@ -4,20 +4,22 @@ import Search from './Search'
 import useCart from '../hooks/useCart'
 import { useSearch } from '../hooks/useSearch'
 import { useInputValue } from '../hooks/useInputValue'
+import axios from 'axios'
+import Loading from './Loading'
 
 export const ClientCard = ({item, onPress}) =>{
 
   return(
-    <Pressable style={{paddingStart: 5, paddingVertical: 5, width: '100%'}} onPress={()=>onPress(item)}>
+    <Pressable style={{paddingStart: 5, paddingVertical: 5, width: '100%', backgroundColor: '#fff'}} onPress={()=>onPress(item)}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
             <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.apellido} , {item?.nombre}</Text>
-            <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: item?.estado === "En forma" ? '#6BCB77' : '#F39D0B'}}>{item?.estado}</Text>
+            <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: item?.estado === "En forma" ? '#6BCB77' : '#F39D0B'}}>{item?.estado || "Sin estado"}</Text>
         </View>
         <View style={{}}>
-            <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.direccion[0]?.calle} {item?.direccion[0]?.numero} , {item?.direccion[0]?.ciudad}</Text>
+            <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.direccion[0]?.calle || "No definido"} {item?.direccion[0]?.numero} , {item?.direccion[0]?.ciudad || "No definido"}</Text>
         </View>
         <View style={{}}>
-            <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.telefono}</Text>
+            <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.telefono || "No definido"}</Text>
         </View>
         <View style={{borderBottomColor: '#d9d9d9', borderBottomWidth: 1, marginHorizontal: '10%', marginTop: 5}} ></View>
     </Pressable>
@@ -25,12 +27,30 @@ export const ClientCard = ({item, onPress}) =>{
 }
 
 
-const ClientSale = ({data}) => {
+const ClientSale = ({}) => {
 
   const {addClientCart, client} = useCart()
   const search = useInputValue('','')
+  const [data, setData] = React.useState([])
+  const [loading, setLoading] = React.useState(false)
 
   const listClient = useSearch(search.value, ["nombre", "apellido"], data)
+
+  React.useEffect(()=>{
+    setLoading(true)
+    axios.get(`https://gzapi.onrender.com/cliente`)
+    .then(function(response){
+      setLoading(false)
+      setData(response.data.body)
+    })
+    .catch(function(error){
+        console.log("get ",error);
+    })
+  },[])
+
+  if (loading) {
+    return <Loading text='Cargando clientes'/>
+  }
 
   return (
     <View>

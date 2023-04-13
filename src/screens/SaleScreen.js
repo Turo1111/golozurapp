@@ -10,11 +10,12 @@ import ModalFilterSale from '../components/ModalFilterSale';
 import { usePacking } from '../context/PackingSaleContext';
 import { useInputValue } from '../hooks/useInputValue';
 import { useSearch } from '../hooks/useSearch';
+import Loading from '../components/Loading';
 const axios = require('axios').default;
 
 const io = require('socket.io-client')
 
-const socket = io('http://10.0.2.2:3000')
+const socket = io('https://gzapi.onrender.com')
 
 export default function SaleScreen() {
 
@@ -23,14 +24,17 @@ export default function SaleScreen() {
     const [filterSale, setFilterSale] = React.useState([])
     const [openModal, setOpenModal] = React.useState(false)
     const [newSale, setNewSale] = useState(false)
+    const [loading, setLoading] = useState(false)
     const {startPacking, startShipping} = usePacking()
     const search = useInputValue('','')
     const tag = [{"cliente": ["nombre", "apellido"]}, "total"]
     const listSale = useSearch(search.value, tag, filterSale)
 
     useEffect(()=>{
+      setLoading(true)
       axios.get(`https://gzapi.onrender.com/venta`)
       .then(function(response){
+        setLoading(false)
         setFilterSale(response.data.body)
       })
       .catch(function(error){
@@ -40,7 +44,6 @@ export default function SaleScreen() {
 
     useEffect(()=>{
       socket.on('venta', (venta) => {
-        console.log(venta)
         setNewSale(!newSale)
       })
     },[])
@@ -56,6 +59,10 @@ export default function SaleScreen() {
     },[filterActive])
 
     const {listSelected} = usePacking()
+
+    if (loading) {
+      return <Loading text='Cargando ventas'/>
+    }
 
   return (
     <View style={styles.content}>

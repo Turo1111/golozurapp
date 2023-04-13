@@ -1,22 +1,13 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import MapView from 'react-native-maps'
 import useCart from '../hooks/useCart'
 import { ClientCard } from './ClientSale'
-import Geocoder from 'react-native-geocoding';
+import { Marker } from 'react-native-maps';
+import OpenCageGeocoder from 'opencage-api-client';
 
 export default function ResumeSale() {
   const {cart, client, totalCart} = useCart()
-
-  // NECESITO CREAR CUENTA FACTURACION
-  /* Geocoder.init("AIzaSyCr2_BCW5AF0KbNlVxDnN8f2NOvQJwlt6A")
-
-  Geocoder.from("Colosseum")
-		.then(json => {
-			var location = json.results[0].geometry.location;
-			console.log(location);
-		})
-		.catch(error => console.warn(error)); */
 
   return (
     <View >
@@ -28,15 +19,7 @@ export default function ResumeSale() {
           }
          
         </View>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: -26.82474519979505,
-            longitude: -65.20032463054747,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
-        />
+        <MyMap address={'25 de Mayo 300, entre Corrientes y Marcos Paz, Barrio Norte, San Miguel de Tucumán, Tucumán, Argentina'} />
         <View style={{padding: 5, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', borderTopColor: 'white', borderTopWidth: 1, marginVertical: 5 }}>
           <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', fontWeight: '800', color: '#7F8487' }}>{cart.length || "0"}</Text>
           <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', fontWeight: '600', color: '#7F8487' }}>Productos</Text>
@@ -63,33 +46,69 @@ export default function ResumeSale() {
     )
 }
 
-const styles = StyleSheet.create({
-    title: {
-      fontSize: 18,
-      fontWeight: '600',
-      fontFamily: 'Cairo-Regular',
-      color: '#7F8487',
-      marginVertical: 10
-    },
-    map: {
-        marginTop: 10,
-        height: '55%'
-    },
-    total: {
-        padding: 10,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        minWidth: '90%'
-    },
-    borderTop: {
-      borderTopColor: '#d7d7d7',
-      borderTopWidth: 1
-    }
-})
+const MyMap = ({ address }) => {
+  const [region, setRegion] = useState(null);
+  const [marker, setMarker] = useState(null);
 
-/* {"code": 4, "message": "Error from the server while geocoding. The received datas are in the error's 'origin' field. Check it for more informations.", 
-"origin": {"error_message": "This IP, site or mobile application is not authorized to use this API key. Request received from IP address 2803:9800:b442:7dbc:a078:98d2:31f8:cda8, with empty referer", 
-"results": [], 
-"status": "REQUEST_DENIED"}}
-W */
+  useEffect(() => {
+    OpenCageGeocoder.geocode({
+      key: '7a974c3f69e449b9b31ec5b3167c7214',
+      q: address,
+    }).then((response) => {
+      const { lat, lng } = response.results[0].geometry;
+      setRegion({
+        latitude: lat,
+        longitude: lng,
+        latitudeDelta: 0.01,
+        longitudeDelta: 0.01,
+      });
+      setMarker({
+        latitude: lat,
+        longitude: lng,
+      });
+    }).catch((error) => console.warn(error));
+  }, [address]);
+
+  if (!region) {
+    return <View style={styles.mapContainer} />;
+  }
+
+  return (
+    <View style={styles.mapContainer}>
+      <MapView style={styles.map} region={region}>
+        {marker && <Marker coordinate={marker} />}
+      </MapView>
+    </View>
+  );
+};
+
+
+const styles = StyleSheet.create({
+  title: {
+    fontSize: 18,
+    fontWeight: '600',
+    fontFamily: 'Cairo-Regular',
+    color: '#7F8487',
+    marginVertical: 10
+  },
+  mapContainer: {
+    width: '100%',
+    height: '55%',
+    backgroundColor: '#eee',
+  },
+  map: {
+      marginTop: 10,
+      height: '100%'
+  },
+  total: {
+      padding: 10,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      minWidth: '90%'
+  },
+  borderTop: {
+    borderTopColor: '#d7d7d7',
+    borderTopWidth: 1
+  }
+})

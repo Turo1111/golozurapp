@@ -8,6 +8,9 @@ import Alert from './src/components/Alert';
 import { PackingSaleProvider } from './src/context/PackingSaleContext';
 import NavigationStack from './src/navigation/NavigationStack';
 import { AlertProvider } from './src/context/AlertContext';
+import ModalLoading from './src/components/ModalLoading';
+import { LoadingProvider } from './src/context/LoadingContext';
+import { AuthProvider } from './src/context/AuthContext';
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
@@ -23,15 +26,20 @@ export default function App() {
   }
   return (
     <NavigationContainer>
-      <AlertProvider>
-        <CartSaleProvider>
-          <PackingSaleProvider>
-              <NavigationStack>
-              </NavigationStack>
-              <Alert/>
-          </PackingSaleProvider>
-        </CartSaleProvider>
-      </AlertProvider>
+      <LoadingProvider>
+        <AlertProvider>
+          <AuthProvider>
+            <CartSaleProvider>
+              <PackingSaleProvider>
+                  <NavigationStack>
+                  </NavigationStack>
+                  <Alert/>
+                  <ModalLoading/>
+              </PackingSaleProvider>
+            </CartSaleProvider>
+          </AuthProvider>
+        </AlertProvider>
+      </LoadingProvider>
     </NavigationContainer>
   );
 }

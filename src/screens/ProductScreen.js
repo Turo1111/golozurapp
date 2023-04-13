@@ -18,12 +18,12 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import EditIcon from 'react-native-vector-icons/AntDesign'
 import InfoProduct from '../components/InfoProduct'
 import EditProduct from '../components/EditProduct'
-import getEnvVars from '../../env'
 import axios from 'axios'
+import Loading from '../components/Loading'
 
 const io = require('socket.io-client')
 
-const socket = io('http://10.0.2.2:3000')
+const socket = io('https://gzapi.onrender.com')
 
 export default function ProductScreen() {
 
@@ -36,6 +36,7 @@ export default function ProductScreen() {
   const [openEdit, setOpenEdit] = useState(false)
   const {openAlert} = useAlert()
   const [infoProduct, setInfoProduct] = useState(undefined)
+  const [loading, setLoading] = useState(false)
 
   const search = useInputValue('','')
 
@@ -43,20 +44,11 @@ export default function ProductScreen() {
 
   const listProduct = useSearch(search.value, tag, data)
 
-  const { URL_BD } = getEnvVars();
-
-  console.log(URL_BD)
-
-  fetch(`${URL_BD}/producto`)
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error(error));
-
   useEffect(()=>{
-    axios.get(`${URL_BD}/producto`)
+    setLoading(true)
+    axios.get(`https://gzapi.onrender.com/producto`)
     .then(function(response){
-      console.log('entre aqui')
-      console.log(response.data.body)
+      setLoading(false)
       setData(response.data.body)
     })
     .catch(function(error){
@@ -66,11 +58,14 @@ export default function ProductScreen() {
 
   useEffect(()=>{
     socket.on('producto', (producto) => {
-      setData([...data, producto])
       setNewProduct(!newProduct)
       openAlert("NUEVO PRODUCTO AGREGADO", "#B6E2A1")
     })
   },[])
+
+  if (loading) {
+    return <Loading text='Cargando productos'/>
+  }
 
   return (
     <View style={styles.content}>
@@ -128,7 +123,7 @@ export default function ProductScreen() {
       </MyBottomSheet>
       <MyBottomSheet open={openEdit} onClose={()=>setOpenEdit(false)} height={510} >
         <View style={{paddingVertical: 10, paddingHorizontal: 15}}>
-          <EditProduct  item={infoProduct}/>
+          <EditProduct  item={infoProduct} onClose={()=>setOpenEdit(false)}/>
         </View>
       </MyBottomSheet>
       <MyBottomSheet open={openInfo} onClose={()=>setOpenInfo(false)} height={380} >

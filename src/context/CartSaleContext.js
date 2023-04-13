@@ -2,10 +2,11 @@ import { useNavigation } from '@react-navigation/native'
 import React, { useState, createContext, useEffect } from 'react'
 import { useDate } from '../hooks/useDate'
 import { useAlert } from './AlertContext';
+import { useLoading } from './LoadingContext';
 const axios = require('axios').default;
 const io = require('socket.io-client')
 
-const socket = io('http://10.0.2.2:3000')
+const socket = io('https://gzapi.onrender.com')
 
 
 export const CartSaleContext = createContext({
@@ -18,6 +19,7 @@ export function CartSaleProvider(props) {
     const [totalCart, setTotalCart] = useState(0)
     const [client, setClient] = useState(undefined)
     const {openAlert} = useAlert()
+    const {setOpen} = useLoading()
 
     const {date} = useDate()
 
@@ -54,19 +56,20 @@ export function CartSaleProvider(props) {
                 descuento: '0',
                 total: totalCart
             }
-    
-            axios.post(`http://10.0.2.2:3000/venta`, sale)
+            onCloseSheet()
+            setOpen(true)
+            axios.post(`https://gzapi.onrender.com/venta`, sale)
             .then(function(response){
                 cart.map(item=>{
-                    axios.post(`http://10.0.2.2:3000/lineaVenta`, 
+                    axios.post(`https://gzapi.onrender.com/lineaVenta`, 
                         {
                             ...item,
                             idVenta: response.data.body._id
                         }
                     )
                     .then(function(response){
-                        onCloseSheet()
                         socket.emit('venta', sale);
+                        setOpen(false)
                     })
                     .catch(function(error){
                         console.log("post",error);
@@ -82,10 +85,9 @@ export function CartSaleProvider(props) {
             setCart([]),
             setClient(undefined)
             setTotalCart(0)
+        }else{
+            openAlert("FALTAN DATOS QUE SELECCIONAR!", '#F7A4A4')
         }
-
-        openAlert("FALTAN DATOS QUE SELECCIONAR!", '#F7A4A4')
-
     }
 
     useEffect(()=>{

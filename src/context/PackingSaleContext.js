@@ -3,13 +3,11 @@ import axios from 'axios'
 import React, { useState, createContext, useEffect, useContext } from 'react'
 import { useDate } from '../hooks/useDate'
 import { useAlert } from './AlertContext'
-<<<<<<< HEAD
+import { useLoading } from './LoadingContext'
 const io = require('socket.io-client')
 
-const socket = io('http://10.0.2.2:3000')
+const socket = io('https://gzapi.onrender.com')
 
-=======
->>>>>>> c8f2924552065524a8ff292417d01086c4fd2bec
 
 export const PackingSaleContext = createContext({
 })
@@ -22,6 +20,7 @@ export function PackingSaleProvider(props) {
     const [saleActive, setSaleActive] = useState(listSelected[indexPacking])
     const [qtyMiss, setQtyMiss] = useState([])
     const {openAlert} = useAlert()
+    const  {setOpen} = useLoading()
 
     const addDeleteSale = (item) => {
 
@@ -35,12 +34,13 @@ export function PackingSaleProvider(props) {
 
     const nextPacking = ( navigation ) => {
         if(indexPacking === listSelected.length-1) {
+            setOpen(true)
             listSelected.map(item=>{
-                console.log(item._id)
-                axios.patch(`http://10.0.2.2:3000/venta/${item._id}`, {estado: "armado"})
+                axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "armado"})
                 .then(function(response){
                     openAlert("SE ACTUALIZARON EL ESTADO DE LAS VENTAS!", '#B6E2A1')
                     socket.emit('venta', listSelected);
+                    setOpen(false)
                 })
                 .catch(function(error){
                     console.log("post",error);
@@ -54,9 +54,11 @@ export function PackingSaleProvider(props) {
             navigation.navigate('Sale')
         }
         else {
+            setOpen(true)
             setListSelected(
                 listSelected.map(elem => elem._id === saleActive._id ? elem = saleActive : elem)
             )
+            setOpen(false)
             changeSale(listSelected[indexPacking+1])
             /* setSaleActive(listSelected[indexPacking+1]) */
             setIndexPacking(indexPacking+1)
@@ -76,29 +78,32 @@ export function PackingSaleProvider(props) {
     }
 
     const nextShipping = (navigation) => {
-        axios.patch(`http://10.0.2.2:3000/venta/${saleActive._id}`, {estado: "entregado"})
+        if(indexPacking === listSelected.length-1) {
+            setOpen(true)
+            listSelected.map(item=>{
+                axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "entregado"})
                 .then(function(response){
-                    openAlert("SE ACTUALIZO EL ESTADO DE LAS VENTA!", '#B6E2A1')
+                    openAlert("SE ACTUALIZARON EL ESTADO DE LAS VENTAS!", '#B6E2A1')
                     socket.emit('venta', listSelected);
+                    setOpen(false)
                 })
                 .catch(function(error){
                     console.log("post",error);
                 })
-
-        setListSelected(
-            listSelected.map(elem => elem._id === saleActive._id ? elem = saleActive : elem)
-        )
-        changeSale(listSelected[indexPacking+1])
-        setIndexPacking(indexPacking+1)
-        setQtyMiss([])
-        if(indexPacking === listSelected.length-1) {
-            console.log("esto",listSelected[0])
+            })
             navigation.popToTop()
             setListSelected([])
             setIndexPacking(0)
             changeSale(listSelected[0])
             setQtyMiss([])
             navigation.navigate('Sale')
+        }else{
+            setListSelected(
+                listSelected.map(elem => elem._id === saleActive._id ? elem = saleActive : elem)
+            )
+            changeSale(listSelected[indexPacking+1])
+            setIndexPacking(indexPacking+1)
+            setQtyMiss([])
         }
     }
 
@@ -140,9 +145,8 @@ export function PackingSaleProvider(props) {
     }
 
     const changeSale = (sale) => {
-        console.log(sale)
         if(sale){
-            axios.get(`http://10.0.2.2:3000/lineaVenta/${sale._id}`)
+            axios.get(`https://gzapi.onrender.com/lineaVenta/${sale._id}`)
                 .then(function(response){
                     setSaleActive({...sale , lineaVenta: response.data.body})
                 })

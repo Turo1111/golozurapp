@@ -31,7 +31,7 @@ export default function ItemSale({item, onPress}) {
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: '#7F8487', marginEnd: 10}}>16</Text>
+            <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: '#7F8487', marginEnd: 10}}>X</Text>
             <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>Productos</Text>
         </View>
         <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: '#7F8487'}}>$19685.99</Text>

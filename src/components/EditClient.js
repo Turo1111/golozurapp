@@ -13,29 +13,27 @@ const io = require('socket.io-client')
 
 const socket = io('https://gzapi.onrender.com')
 
-export default function NewClient({onClose}) {
+export default function EditClient({onClose, item}) {
 
     const [openModalSearch, setOpenModalSearch] = useState(false)
     const {openAlert} = useAlert()
     const { setOpen } = useLoading()
 
     const formik = useFormik({
-        initialValues: initialValues(),
+        initialValues: initialValues(item),
         validateOnChange: false,
         onSubmit: (formValue) => {
-            if(formValue.apellido !== '' && formValue.nombre !== '' && formValue.email !== ''){
-                setOpen(true)
+            if(formValue.apellido !== '' && formValue.nombre !== ''){
                 onClose()
-                axios.post(`https://gzapi.onrender.com/cliente`, formValue)
+                setOpen(true)
+                axios.patch(`https://gzapi.onrender.com/cliente/${formValue._id}`, formValue)
                 .then(function(response){
                     socket.emit('cliente', formValue);
                     setOpen(false)
                 })
                 .catch(function(error){
-                    openAlert("NO SE PUDO AGREGAR EL PRODUCTO", "#F7A4A4")
+                    openAlert("NO SE PUDO MODIFICAR EL PRODUCTO", "#F7A4A4")
                 })
-            }else{
-                openAlert("COMPLETE APELLIDO O NOMBRE O EMAIL", "#F7A4A4")
             }
         }
     })
@@ -70,7 +68,7 @@ export default function NewClient({onClose}) {
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
             <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Direcciones :</Text>
             <TextInput placeholder={formik.values.direccion.ciudad === '' ? 'Direcciones' : 
-                    `${formik.values.direccion[0].ciudad}, ${formik.values.direccion[0].calle}, ${formik.values.direccion[0].numero}`
+                    `${formik.values.direccion[0]?.ciudad}, ${formik.values.direccion[0]?.calle}, ${formik.values.direccion[0]?.numero}`
                 }  
                 style={[styles.input, {width:'55%'}]} editable={false}
             />
@@ -79,6 +77,9 @@ export default function NewClient({onClose}) {
             }} >
                 <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Abrir</Text>
             </Pressable>
+        </View>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
+            <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Estado : {formik.values.estado}</Text>
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'center', marginVertical: 5}} >
             <Button text={'Agregar'} onPress={formik.handleSubmit}  fontSize={14} width={'30%'} />
@@ -105,18 +106,15 @@ const styles = StyleSheet.create({
     },
 })
 
-function initialValues() {
+function initialValues(item) {
     return {
-        nombre: "",
-        apellido: "",
-        email: "",
-        direccion: [{
-            ciudad: "",
-            calle: "",
-            numero: ""
-        }],
-        telefono: [],
-        estado: 'En forma',
+        _id: item?._id || "",
+        nombre: item?.nombre || "",
+        apellido: item?.apellido || "",
+        email: item?.email || "",
+        direccion: item?.direccion.length === 0 ? [] : item?.direccion,
+        telefono: item?.telefono || [],
+        estado: item?.estado || "En forma",
     }
 }
 

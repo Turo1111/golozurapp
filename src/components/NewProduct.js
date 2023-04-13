@@ -8,34 +8,38 @@ import { FlatList } from 'react-native-gesture-handler';
 import { useFormik } from 'formik';
 import { useAlert } from '../context/AlertContext';
 import InputSelect from './InputSelect';
+import { useLoading } from '../context/LoadingContext';
 const axios = require('axios').default;
 
 const io = require('socket.io-client')
 
-const socket = io('http://10.0.2.2:3000')
+const socket = io('https://gzapi.onrender.com')
 
 export default function NewProduct({onClose}) {
 
     const [openModalSearch, setOpenModalSearch] = useState(false)
     const [enlace, setEnlace] = useState('')
     const {openAlert} = useAlert()
+    const {setOpen} = useLoading()
 
     const formik = useFormik({
         initialValues: initialValues(),
         validateOnChange: false,
         onSubmit: (formValue) => {
-            /* axios.post(`http://10.0.2.2:3000/producto`, {...formValue,
+            onClose()
+            setOpen(true)
+            axios.post(`https://gzapi.onrender.com/producto`, {...formValue,
                 categoria: formValue.categoria._id,
                 marca: formValue.marca._id,
                 proveedor: formValue.proveedor._id,
             })
             .then(function(response){
                 socket.emit('producto', formValue);
-                onClose()
+                setOpen(false)
             })
             .catch(function(error){
                 openAlert("NO SE PUDO AGREGAR EL PRODUCTO", "#F7A4A4")
-            }) */
+            }) 
         }
     })
 
@@ -198,7 +202,7 @@ const ModalSearch = ({open, onClose, title, enlace, onChangeText}) => {
         },
         validateOnChange: false,
         onSubmit: (formValue) => {
-            axios.post(`http://10.0.2.2:3000/${enlace}`, formValue)
+            axios.post(`https://gzapi.onrender.com/${enlace}`, formValue)
             .then(function(response){
                 formik.setFieldValue('descripcion', '')
                 socket.emit('categoria', formValue);
@@ -213,7 +217,6 @@ const ModalSearch = ({open, onClose, title, enlace, onChangeText}) => {
 
     useEffect(() => {
     
-
         socket.on('categoria', (categoria) => {
             console.log("frontend",categoria);
             setData([...data, categoria])
@@ -225,7 +228,7 @@ const ModalSearch = ({open, onClose, title, enlace, onChangeText}) => {
 
 
     useEffect(()=>{
-        axios.get(`http://10.0.2.2:3000/${enlace}`)
+        axios.get(`https://gzapi.onrender.com/${enlace}`)
         .then(function(response){
             setData(response.data.body)
         })

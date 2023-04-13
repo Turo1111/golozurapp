@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
 import React, {useEffect, useState} from 'react'
-import { SelectList } from 'react-native-dropdown-select-list';
 import Button from './Button';
 import Modal from './Modal';
 import Search from './Search';
@@ -8,44 +7,38 @@ import { FlatList } from 'react-native-gesture-handler';
 import { useFormik } from 'formik';
 import { useAlert } from '../context/AlertContext';
 import InputSelect from './InputSelect';
+import { useLoading } from '../context/LoadingContext';
 const axios = require('axios').default;
 
 const io = require('socket.io-client')
 
-const socket = io('http://10.0.2.2:3000')
+const socket = io('https://gzapi.onrender.com')
 
 export default function EditProduct({item = undefined, onClose}) {
-
-    console.log(item)
 
     const [openModalSearch, setOpenModalSearch] = useState(false)
     const [enlace, setEnlace] = useState('')
     const {openAlert} = useAlert()
+    const {setOpen} = useLoading()
 
     const formik = useFormik({
         initialValues: initialValues(item),
         validateOnChange: false,
         onSubmit: (formValue) => {
-
-          let product = {
-            ...formValue,
-            
-          }
-
-          console.log("edit", formValue)
-
-            /* axios.post(`http://10.0.2.2:3000/producto`, {...formValue,
+            setOpen(true)
+            onClose()
+            axios.patch(`https://gzapi.onrender.com/producto/${formValue._id}`, {...formValue,
                 categoria: formValue.categoria._id,
                 marca: formValue.marca._id,
                 proveedor: formValue.proveedor._id,
             })
             .then(function(response){
                 socket.emit('producto', formValue);
-                onClose()
+                setOpen(false)
             })
             .catch(function(error){
                 openAlert("NO SE PUDO AGREGAR EL PRODUCTO", "#F7A4A4")
-            }) */
+            })
         }
     })
 
@@ -169,6 +162,7 @@ export default function EditProduct({item = undefined, onClose}) {
 
 function initialValues(item) {
     return {
+        _id: item?._id || "",
         descripcion: item?.descripcion || "",
         codigoBarra: item?.codigoBarra || "",
         stock: (item?.stock)?.toString() || 0,
@@ -208,7 +202,7 @@ const ModalSearch = ({open, onClose, title, enlace, onChangeText}) => {
         },
         validateOnChange: false,
         onSubmit: (formValue) => {
-            axios.post(`http://10.0.2.2:3000/${enlace}`, formValue)
+            axios.post(`https://gzapi.onrender.com/${enlace}`, formValue)
             .then(function(response){
                 formik.setFieldValue('descripcion', '')
                 socket.emit('categoria', formValue);
@@ -235,7 +229,7 @@ const ModalSearch = ({open, onClose, title, enlace, onChangeText}) => {
 
 
     useEffect(()=>{
-        axios.get(`http://10.0.2.2:3000/${enlace}`)
+        axios.get(`https://gzapi.onrender.com/${enlace}`)
         .then(function(response){
             setData(response.data.body)
         })

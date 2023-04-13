@@ -20,6 +20,9 @@ export default function ListSale({height='50%', renderItem, renderHiddenItem, ri
     <View style={{paddingHorizontal: 15}} >
         <SwipeListView
             data={listSale}
+            ListEmptyComponent={
+                <Text style={{textAlign: 'center', marginTop: 15, fontSize: 25, fontWeight: 'bold', color: '#c9c9c9'}} >No hay Ventas</Text>
+              }
             renderItem={
                 ({item})=>(
                     <TouchableHighlight
@@ -36,7 +39,7 @@ export default function ListSale({height='50%', renderItem, renderHiddenItem, ri
                         <TouchableOpacity
                             style={[styles.backRightBtn, styles.backRightBtnRight]}
                             onPress={async ()=>{
-                                await axios.get(`http://10.0.2.2:3000/lineaVenta/${data.item._id}`)
+                                await axios.get(`https://gzapi.onrender.com/lineaVenta/${data.item._id}`)
                                 .then(function(response){
                                     setSaleInfo({...data.item , lineaVenta: response.data.body})
                                     setOpenBS(true)
@@ -57,7 +60,7 @@ export default function ListSale({height='50%', renderItem, renderHiddenItem, ri
             previewOpenValue={-40}
             previewOpenDelay={3000}
         />
-        <MyBottomSheet open={openBS} onClose={()=>setOpenBS(false)} >
+        <MyBottomSheet open={openBS} onClose={()=>setOpenBS(false)} height={510} >
             <InfoSale info={saleInfo} />
         </MyBottomSheet>
     </View>

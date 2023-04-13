@@ -15,6 +15,7 @@ import ResumeBottomSheet from './../components/ResumeBottomSheet';
 import { useInputValue } from '../hooks/useInputValue';
 import { useSearch } from '../hooks/useSearch';
 import MyBottomSheet from '../components/MyBottomSheet';
+import Loading from '../components/Loading';
 const axios = require('axios').default;
 
 
@@ -26,7 +27,7 @@ export default function NewSaleScreen() {
   const [products, setProducts] = useState([])
   const [clients, setClients] = useState([])
   const [openBS, setOpenBS] = useState(false)
-
+  const [loading, setLoading] = useState(false)
 
   const search = useInputValue('','')
 
@@ -35,19 +36,11 @@ export default function NewSaleScreen() {
   const listProduct = useSearch(search.value, tag, products)
 
   useEffect(()=>{
-    axios.get(`http://10.0.2.2:3001/producto`)
+    setLoading(true)
+    axios.get(`https://gzapi.onrender.com/producto`)
     .then(function(response){
+      setLoading(false)
       setProducts(response.data.body)
-    })
-    .catch(function(error){
-        console.log("get ",error);
-    })
-  },[])
-
-  useEffect(()=>{
-    axios.get(`http://10.0.2.2:3000/cliente`)
-    .then(function(response){
-      setClients(response.data.body)
     })
     .catch(function(error){
         console.log("get ",error);
@@ -59,6 +52,10 @@ export default function NewSaleScreen() {
     if(item) {
       setItemProduct(item)
     }
+  }
+
+  if (loading) {
+    return <Loading text='Cargando productos'/>
   }
 
 return (
