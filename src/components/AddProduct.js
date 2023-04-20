@@ -23,12 +23,13 @@ export default function AddProduct({openModal, onClose, item}) {
 
   const addProduct = () => {
     const product = {
-      idProduct: item._id,
+      idProducto: item._id,
       descripcion: item.descripcion,
       peso: item.peso,
       sabor: item.sabor,
       precioUnitario: item.precioUnitario,
       cantidad: qty,
+      modificado: false,
       total,
       estado: dropProduct ? 'entregado' : 'sin entregar'
     }

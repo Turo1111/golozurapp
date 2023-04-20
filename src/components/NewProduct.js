@@ -26,20 +26,25 @@ export default function NewProduct({onClose}) {
         initialValues: initialValues(),
         validateOnChange: false,
         onSubmit: (formValue) => {
-            onClose()
-            setOpen(true)
-            axios.post(`https://gzapi.onrender.com/producto`, {...formValue,
-                categoria: formValue.categoria._id,
-                marca: formValue.marca._id,
-                proveedor: formValue.proveedor._id,
-            })
-            .then(function(response){
-                socket.emit('producto', formValue);
-                setOpen(false)
-            })
-            .catch(function(error){
-                openAlert("NO SE PUDO AGREGAR EL PRODUCTO", "#F7A4A4")
-            }) 
+            if (formValue.descripcion !== '', formValue.stock > 0, formValue.categoria !== '', formValue.precioCompra > 0, formValue.precioUnitario > 0) {
+                onClose()
+                setOpen(true)
+                axios.post(`https://gzapi.onrender.com/producto`, {...formValue,
+                    categoria: formValue.categoria._id,
+                    marca: formValue.marca._id,
+                    proveedor: formValue.proveedor._id,
+                })
+                .then(function(response){
+                    openAlert("PRODUCTO AGREGADO CON EXITO", '#B6E2A1')
+                    socket.emit('producto', formValue);
+                    setOpen(false)
+                })
+                .catch(function(error){
+                    openAlert("NO SE PUDO AGREGAR EL PRODUCTO", "#F7A4A4")
+                }) 
+            }else{
+                openAlert("FALTA COMPLETAR DATOS", "#F7A4A4")
+            }
         }
     })
 

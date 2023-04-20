@@ -19,7 +19,7 @@ export default function ResumeSale() {
           }
          
         </View>
-        <MyMap address={'25 de Mayo 300, entre Corrientes y Marcos Paz, Barrio Norte, San Miguel de Tucumán, Tucumán, Argentina'} />
+        <MyMap address={`${client?.direccion[0]?.calle} ${client?.direccion[0]?.numero} , ${client?.direccion[0]?.ciudad}, Tucumán, Argentina`} />
         <View style={{padding: 5, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', borderTopColor: 'white', borderTopWidth: 1, marginVertical: 5 }}>
           <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', fontWeight: '800', color: '#7F8487' }}>{cart.length || "0"}</Text>
           <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', fontWeight: '600', color: '#7F8487' }}>Productos</Text>

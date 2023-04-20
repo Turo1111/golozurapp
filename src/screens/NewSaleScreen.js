@@ -31,7 +31,9 @@ export default function NewSaleScreen() {
 
   const search = useInputValue('','')
 
-  const tag = ["descripcion", "codigoBarra", "marca", "categoria"]
+  const tag = ["descripcion", "codigoBarra", "marca", "categoria"]/* 
+
+  console.log(products.filter((item)=>item.categoria === "Galletas")) */
 
   const listProduct = useSearch(search.value, tag, products)
 

@@ -1,5 +1,5 @@
-import { FlatList, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { FlatList, StyleSheet, Switch, Text, View } from 'react-native'
+import React, { useState } from 'react'
 import { Divider } from '@rneui/base'
 import ProductCard from './ProductCard'
 
@@ -15,6 +15,9 @@ export default function InfoSale({info}) {
     
         return valueColor
     }
+
+    const [isEnabled, setIsEnabled] = useState(false);
+    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
     return (
         <View>
@@ -32,6 +35,16 @@ export default function InfoSale({info}) {
                 </Text>
                 <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >FechaPreventa : {info.fechaPre}</Text>
                 <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Fecha Entrega : {info.fechaEntrega || 'no entregado'}</Text>
+                <View style={{flexDirection: 'row', alignItems: 'center'}} >
+                    <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Modificaciones : </Text>
+                    <Switch
+                      trackColor={{false: '#767577', true: '#81b0ff'}}
+                      thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                      ios_backgroundColor="#3e3e3e"
+                      onValueChange={toggleSwitch}
+                      value={isEnabled}
+                    />
+                </View>
             </View>
             <FlatList
                 data={info.lineaVenta}

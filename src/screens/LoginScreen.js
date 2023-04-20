@@ -21,7 +21,7 @@ export default function LoginScreen({navigation}) {
         },
         validateOnChange: false,
         onSubmit: (formValue) => {
-            setLoading(true)
+           /*  setLoading(true)
             axios.post(`https://gzapi.onrender.com/user/login`, formValue)
             .then(function(response){
                 addUser(response.data.body)
@@ -32,9 +32,9 @@ export default function LoginScreen({navigation}) {
             .catch(function(error){
                 console.log("post ",error);
                 openAlert("DATOS INCORRECTOS WACHO!", '#F7A4A4')
-            }) 
-            /* navigation.navigate('NavigationDrawer')
-            openAlert("LOGEADO CORRECTAMENTE CHE!", '#B6E2A1') */
+            })  */
+            navigation.navigate('NavigationDrawer')
+            openAlert("LOGEADO CORRECTAMENTE CHE!", '#B6E2A1')
         }
     })
 

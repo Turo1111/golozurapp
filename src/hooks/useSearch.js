@@ -14,6 +14,7 @@ export const useSearch = (search, tags, list) => {
                 item[key][i]?.toString().toLowerCase().indexOf(search.toLowerCase()) !== -1 && result.push(item)
               })
             } else{
+              /* console.log(item[tag]?.toString().toLowerCase().indexOf(search.toLowerCase())) */
               item[tag]?.toString().toLowerCase().indexOf(search.toLowerCase()) !== -1 && result.push(item)
             }
           })

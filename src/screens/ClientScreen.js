@@ -1,21 +1,13 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React, {useEffect, useRef, useState} from 'react'
 import Search from '../components/Search'
-import Slider from 'react-native-vector-icons/FontAwesome'
-import ListSale from '../components/ListSale'
-import ItemSale from '../components/ItemSale'
 import Button from '../components/Button'
-import ProductCard from '../components/ProductCard'
-import BottomSheet from "react-native-gesture-bottom-sheet";
-import NewProduct from '../components/NewProduct'
-import Modal from '../components/Modal'
 import { useAlert } from '../context/AlertContext'
 import { useInputValue } from '../hooks/useInputValue'
 import { useSearch } from '../hooks/useSearch'
 import MyBottomSheet from '../components/MyBottomSheet'
 import { ClientCard } from '../components/ClientSale'
 import NewClient from '../components/NewClient'
-import { useFonts } from '@expo-google-fonts/inter'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import Icon from 'react-native-vector-icons/Ionicons'
 import EditIcon from 'react-native-vector-icons/AntDesign'
@@ -26,7 +18,7 @@ const axios = require('axios').default;
 
 const io = require('socket.io-client')
 
-const socket = io('https://gzapi.onrender.com')
+
 
 export default function ClientScreen() {
 
@@ -62,10 +54,39 @@ export default function ClientScreen() {
   },[newClient])
 
   useEffect(()=>{
+    /* const socket = io('https://gzapi.onrender.com')
     socket.on('cliente', (cliente) => {
-      setNewClient(!newClient)
+      const exist = data.some(elem => elem._id === cliente._id )
+      let array = data.map((item)=> item._id === cliente._id ? cliente : item)
+      exist ? setData(array) : setData((prevData)=>[...prevData, cliente])
       openAlert("NUEVO CLIENTE AGREGADO", "#B6E2A1")
     })
+    return () => {
+      socket.disconnect();
+    }; */
+    const socket = io('https://gzapi.onrender.com')
+    socket.on('cliente', (cliente) => {
+      const exist = data.find(elem => elem._id === cliente._id )
+      if (exist) {
+        // Si existe, actualizamos sus valores sin perder los demás
+        setData((prevList) =>
+          prevList.map((item) =>
+            item._id === cliente._id ? cliente : item
+          )
+        );
+        openAlert("CLIENTE MODIFICADO", "#B6E2A1")
+      } else {
+        // Si no existe, agregamos el nuevo producto a la lista
+        setData((prevList) => [
+          ...prevList,
+          cliente,
+        ]);
+        openAlert("NUEVO CLIENTE AGREGADO", "#B6E2A1")
+      }
+    })
+    return () => {
+      socket.disconnect();
+    };
   },[])
 
   if (loading) {
@@ -181,5 +202,3 @@ const styles = StyleSheet.create({
         color: '#FFF',
     },
 })
-
-

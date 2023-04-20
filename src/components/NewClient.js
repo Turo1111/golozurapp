@@ -32,7 +32,8 @@ export default function NewClient({onClose}) {
                     setOpen(false)
                 })
                 .catch(function(error){
-                    openAlert("NO SE PUDO AGREGAR EL PRODUCTO", "#F7A4A4")
+                    setOpen(false)
+                    openAlert("NO SE PUDO AGREGAR EL CLIENTE", "#F7A4A4")
                 })
             }else{
                 openAlert("COMPLETE APELLIDO O NOMBRE O EMAIL", "#F7A4A4")

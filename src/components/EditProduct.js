@@ -166,18 +166,18 @@ function initialValues(item) {
         descripcion: item?.descripcion || "",
         codigoBarra: item?.codigoBarra || "",
         stock: (item?.stock)?.toString() || 0,
-        bulto: (item?.bulto)?.toString() || 0,
+        bulto: item?.bulto !== undefined ? (item?.bulto)?.toString() : 0,
         peso: {
-            cantidad: (item?.peso.cantidad).toString() || 0,
-            unidad: item?.peso.unidad || "unidad"
+            cantidad: item?.peso?.cantidad !== undefined ? (item?.peso?.cantidad).toString() : 0,
+            unidad: item?.peso?.unidad !== undefined ? item?.peso?.unidad : "unidad"
         },
         categoria: item?.categoria || '',
         marca: item?.marca || '',
         proveedor: item?.proveedor || '',
         sabor: item?.sabor || '',
-        precioBulto: (item?.precioBulto)?.toString() || 0,
-        precioCompra: (item?.precioCompra)?.toString() || 0,
-        precioUnitario: (item?.precioUnitario)?.toString() || 0
+        precioBulto: item?.precioBulto !== undefined ? (item?.precioBulto)?.toString() : 0,
+        precioCompra: item?.precioCompra !== undefined ? (item?.precioCompra)?.toString() : 0,
+        precioUnitario: item?.precioUnitario !== undefined ?  (item?.precioUnitario)?.toString() : 0
     }
 }
 

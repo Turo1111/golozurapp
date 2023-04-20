@@ -22,15 +22,19 @@ export function PackingSaleProvider(props) {
     const {openAlert} = useAlert()
     const  {setOpen} = useLoading()
 
-    const addDeleteSale = (item) => {
+    //para agregar o quitar ventas a la lista seleccionada
 
+    const addDeleteSale = (item) => {
         if(item) {
-            const exist = listSelected.some(elem => elem._id === item._id )
-            listSelected.length === 0 && changeSale(item)
+            const exist = listSelected.some(elem => elem._id === item._id ) // preg si existe
+            listSelected.length === 0 && changeSale(item)  //si no hay elementos en la lista llamo a esta funcion para traer los productos de la venta
+            //se agrega si no existe o se elimina si existe
             !exist ? setListSelected([...listSelected, item]) 
             : setListSelected(listSelected.filter(elem => elem._id !== item._id ))
         }
     }
+
+    //
 
     const nextPacking = ( navigation ) => {
         if(indexPacking === listSelected.length-1) {
@@ -38,8 +42,9 @@ export function PackingSaleProvider(props) {
             listSelected.map(item=>{
                 axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "armado"})
                 .then(function(response){
+                    console.log(item)
                     openAlert("SE ACTUALIZARON EL ESTADO DE LAS VENTAS!", '#B6E2A1')
-                    socket.emit('venta', listSelected);
+                    socket.emit('venta', {...item,estado: "armado"});
                     setOpen(false)
                 })
                 .catch(function(error){
@@ -54,16 +59,16 @@ export function PackingSaleProvider(props) {
             navigation.navigate('Sale')
         }
         else {
+
             setOpen(true)
             setListSelected(
                 listSelected.map(elem => elem._id === saleActive._id ? elem = saleActive : elem)
             )
             setOpen(false)
             changeSale(listSelected[indexPacking+1])
-            /* setSaleActive(listSelected[indexPacking+1]) */
             setIndexPacking(indexPacking+1)
             setQtyMiss([])
-        }
+        }  
     }
 
     const afterPacking = ( navigation ) => {
@@ -84,7 +89,7 @@ export function PackingSaleProvider(props) {
                 axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "entregado"})
                 .then(function(response){
                     openAlert("SE ACTUALIZARON EL ESTADO DE LAS VENTAS!", '#B6E2A1')
-                    socket.emit('venta', listSelected);
+                    socket.emit('venta', {...item,estado: "entregado"});
                     setOpen(false)
                 })
                 .catch(function(error){
@@ -115,8 +120,8 @@ export function PackingSaleProvider(props) {
     }
 
     const editQty = (item) => {
-
-        const lineaVenta = saleActive.lineaVenta.map(prd=> prd.idProduct === item.idProduct ? prd = item : prd )
+        console.log(item)
+        const lineaVenta = saleActive.lineaVenta.map(prd=> prd._id === item._id ? prd = item : prd )
         const total = lineaVenta.reduce( (accumulator, currentValue) => {
             return (parseFloat(accumulator) + parseFloat(currentValue.total)).toFixed(2)
         }, 0)
@@ -133,9 +138,6 @@ export function PackingSaleProvider(props) {
             ...saleActive,
             lineaVenta : saleActive.lineaVenta.filter(obj => item._id !== obj._id)
         })
-        /* console.log(item._id)
-        console.log(saleActive.lineaVenta.filter(obj => item._id !== obj._id)) */
-        /* console.log(saleActive.lineaVenta) */
     }
 
     const qtyChange = (id) => {
@@ -145,6 +147,7 @@ export function PackingSaleProvider(props) {
     }
 
     const changeSale = (sale) => {
+        //cambia el saleactive y trae productos de la venta
         if(sale){
             axios.get(`https://gzapi.onrender.com/lineaVenta/${sale._id}`)
                 .then(function(response){
@@ -194,4 +197,4 @@ export function PackingSaleProvider(props) {
 
 export function usePacking() {
     return useContext(PackingSaleContext);
-  }
+}

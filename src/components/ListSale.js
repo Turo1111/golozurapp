@@ -41,6 +41,7 @@ export default function ListSale({height='50%', renderItem, renderHiddenItem, ri
                             onPress={async ()=>{
                                 await axios.get(`https://gzapi.onrender.com/lineaVenta/${data.item._id}`)
                                 .then(function(response){
+                                    console.log(response.data.body)
                                     setSaleInfo({...data.item , lineaVenta: response.data.body})
                                     setOpenBS(true)
                                 })
@@ -60,7 +61,7 @@ export default function ListSale({height='50%', renderItem, renderHiddenItem, ri
             previewOpenValue={-40}
             previewOpenDelay={3000}
         />
-        <MyBottomSheet open={openBS} onClose={()=>setOpenBS(false)} height={510} >
+        <MyBottomSheet open={openBS} onClose={()=>setOpenBS(false)} height={600} >
             <InfoSale info={saleInfo} />
         </MyBottomSheet>
     </View>

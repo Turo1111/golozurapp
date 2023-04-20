@@ -7,6 +7,8 @@ import useCart from '../hooks/useCart';
 
 export default function RenderHiddenItem({item, rowClose, editQty, deleteItemCart}) {
 
+    console.log("cantidad",item.cantidad)
+
     const [qty, setQty] = React.useState(item.cantidad)
     const [total, setTotal] = React.useState(item.total)
 
@@ -18,6 +20,7 @@ export default function RenderHiddenItem({item, rowClose, editQty, deleteItemCar
         if (rowClose && qty !== item.cantidad) {
             editQty({
                 ...item,
+                modificado: true,
                 cantidad: qty,
                 total: total
             })

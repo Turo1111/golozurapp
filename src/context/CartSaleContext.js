@@ -24,9 +24,8 @@ export function CartSaleProvider(props) {
     const {date} = useDate()
 
     const addItemCart = (item) => {
-
         if(item) {
-            const exist = cart.some(elem => elem.idProduct === item.idProduct )
+            const exist = cart.some(elem => elem.idProducto === item.idProducto )
             !exist && setCart([...cart, item])
         }
     }
@@ -68,7 +67,8 @@ export function CartSaleProvider(props) {
                         }
                     )
                     .then(function(response){
-                        socket.emit('venta', sale);
+                        console.log('creada')
+                        socket.emit('venta', {sale, cliente: client});
                         setOpen(false)
                     })
                     .catch(function(error){

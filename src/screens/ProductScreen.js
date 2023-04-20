@@ -57,10 +57,32 @@ export default function ProductScreen() {
   },[newProduct])
 
   useEffect(()=>{
+    const socket = io('https://gzapi.onrender.com')
     socket.on('producto', (producto) => {
-      setNewProduct(!newProduct)
-      openAlert("NUEVO PRODUCTO AGREGADO", "#B6E2A1")
+      const exist = data.find(elem => elem._id === producto._id )
+      if (exist) {
+        // Si existe, actualizamos sus valores sin perder los demás
+        setData((prevList) =>
+          prevList.map((item) =>
+            item._id === producto._id ? {
+              ...producto,
+              categoria: producto.categoria.descripcion,
+            } : item
+          )
+        );
+        openAlert("PRODUCTO MODIFICADO", "#B6E2A1")
+      } else {
+        // Si no existe, agregamos el nuevo producto a la lista
+        setData((prevList) => [
+          ...prevList,
+          { ...producto, categoria: producto.categoria.descripcion },
+        ]);
+        openAlert("NUEVO PRODUCTO AGREGADO", "#B6E2A1")
+      }
     })
+    return () => {
+      socket.disconnect();
+    };
   },[])
 
   if (loading) {
@@ -80,7 +102,7 @@ export default function ProductScreen() {
         
         <SwipeListView
           data={listProduct}
-          renderItem={({item})=><ProductCard {...item} />}
+          renderItem={({item})=><ProductCard {...item} onClick={()=>console.log(item)} />}
           ListEmptyComponent={
             <Text style={{textAlign: 'center', marginTop: 15, fontSize: 25, fontWeight: 'bold', color: '#c9c9c9'}} >No hay productos</Text>
           }

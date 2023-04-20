@@ -11,6 +11,7 @@ import { usePacking } from '../context/PackingSaleContext';
 import { useInputValue } from '../hooks/useInputValue';
 import { useSearch } from '../hooks/useSearch';
 import Loading from '../components/Loading';
+import { useAlert } from '../context/AlertContext';
 const axios = require('axios').default;
 
 const io = require('socket.io-client')
@@ -29,6 +30,7 @@ export default function SaleScreen() {
     const search = useInputValue('','')
     const tag = [{"cliente": ["nombre", "apellido"]}, "total"]
     const listSale = useSearch(search.value, tag, filterSale)
+    const {openAlert} = useAlert()
 
     useEffect(()=>{
       setLoading(true)
@@ -43,9 +45,32 @@ export default function SaleScreen() {
     },[newSale])
 
     useEffect(()=>{
+      const socket = io('https://gzapi.onrender.com')
       socket.on('venta', (venta) => {
-        setNewSale(!newSale)
+        /* console.log(venta)
+        console.log(filterSale) */
+        const exist = filterSale.find(elem => elem._id === venta._id )
+        console.log(exist)
+        if (exist) {
+          // Si existe, actualizamos sus valores sin perder los demás
+          console.log('ya existe')
+          setFilterSale((prevData) =>
+            prevData.map((item) =>
+              item._id === venta._id ? venta : item
+            )
+          );
+          openAlert("VENTA MODIFICADA", "#B6E2A1")
+        } else {
+          // Si no existe, agregamos el nuevo producto a la lista
+          setFilterSale((prevData)=>[...prevData, venta])
+          openAlert("NUEVA VENTA AGREGADA", "#B6E2A1")
+        }
+        
       })
+      return () => {
+        socket.disconnect();
+      };
+      
     },[])
 
     const onFilterActive = (item) => {

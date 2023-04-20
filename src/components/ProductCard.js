@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
 import { usePacking } from '../context/PackingSaleContext';
 
-export default function ProductCard({_id, idProduct, descripcion, stock, peso, precioUnitario, sabor, cantidad, total, estado, onClick=()=>console.log("product card no tiene funcion"), cart, onLongPress}) {
+export default function ProductCard({_id, idProduct, descripcion, stock, peso, precioUnitario, sabor, categoria, cantidad, total, estado, onClick=()=>console.log("product card no tiene funcion"), cart, onLongPress}) {
 
     const item = {_id, descripcion, stock, peso, precioUnitario, sabor}
 
@@ -20,7 +20,8 @@ export default function ProductCard({_id, idProduct, descripcion, stock, peso, p
               <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: estado === "entregado" ? '#6BCB77' : '#F39D0B'}}>{estado || ""}</Text>
           </View>
           <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>sabor: {sabor || "undefined"}</Text>
+              {/* <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>sabor: {sabor || "undefined"}</Text> */}
+              <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>Categoria: {categoria || "undefined"}</Text>
           </View>
           <View style={{flexDirection: 'row', marginBottom: 5, justifyContent: 'space-between'}}>
               <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>
