@@ -10,7 +10,7 @@ export default function ResumeSale() {
   const {cart, client, totalCart} = useCart()
 
   return (
-    <View >
+    <View style={{flex: 1}} >
         <View style={{paddingStart: 5, width: '100%'}}>
           <Text style={styles.title}>Resumen</Text>
           {
@@ -21,16 +21,16 @@ export default function ResumeSale() {
         </View>
         <MyMap address={`${client?.direccion[0]?.calle} ${client?.direccion[0]?.numero} , ${client?.direccion[0]?.ciudad}, Tucumán, Argentina`} />
         <View style={{padding: 5, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', borderTopColor: 'white', borderTopWidth: 1, marginVertical: 5 }}>
-          <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', fontWeight: '800', color: '#7F8487' }}>{cart.length || "0"}</Text>
-          <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', fontWeight: '600', color: '#7F8487' }}>Productos</Text>
-          <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', fontWeight: '800', color: '#7F8487' }}>${totalCart || "0"}</Text>
+          <Text style={{fontSize: 20, fontFamily: 'Cairo-Regular', fontWeight: '800', color: '#7F8487' }}>{cart.length || "0"}</Text>
+          <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', fontWeight: '600', color: '#7F8487' }}>Productos</Text>
+          <Text style={{fontSize: 20, fontFamily: 'Cairo-Regular', fontWeight: '800', color: '#7F8487' }}>${totalCart || "0"}</Text>
         </View>
         <View style={{padding: 5, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', borderTopColor: 'white', borderTopWidth: 1, marginVertical: 5 }}>
-          <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', fontWeight: '800', color: '#7F8487' }}>
+          <Text style={{fontSize: 20, fontFamily: 'Cairo-Regular', fontWeight: '800', color: '#7F8487' }}>
             {cart.filter(item=> item.estado === "entregado").length}
           </Text>
-          <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', fontWeight: '600', color: '#7F8487' }}>Entrega inmediata</Text>
-          <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', fontWeight: '800', color: '#7F8487' }}>
+          <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', fontWeight: '600', color: '#7F8487' }}>Entrega inmediata</Text>
+          <Text style={{fontSize: 20, fontFamily: 'Cairo-Regular', fontWeight: '800', color: '#7F8487' }}>
             $ {cart.filter(item=> item.estado === "entregado" ).reduce(
                   (accumulator, currentValue) => parseFloat(accumulator) + parseFloat(currentValue.total),
                   0
@@ -39,8 +39,8 @@ export default function ResumeSale() {
           </Text>
         </View>
         <View style={[styles.total, styles.borderTop]}>
-          <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', fontWeight: '600', color: '#7F8487' }}>Total a pagar:</Text>
-          <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', fontWeight: '800', color: '#7F8487' }}>${totalCart || "0"}</Text>
+          <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', fontWeight: '600', color: '#7F8487' }}>Total a pagar:</Text>
+          <Text style={{fontSize: 20, fontFamily: 'Cairo-Regular', fontWeight: '800', color: '#7F8487' }}>${totalCart || "0"}</Text>
         </View>
     </View>
     )
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
   },
   mapContainer: {
     width: '100%',
-    height: '55%',
+    flex: 1,
     backgroundColor: '#eee',
   },
   map: {

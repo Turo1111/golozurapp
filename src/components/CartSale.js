@@ -14,11 +14,11 @@ export default function CartSale() {
   const [rowClose, setRowClose] = useState(false)
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Text style={styles.title}>Linea de venta</Text>
       <SwipeListView
        data={cart}
-       style={[styles.list, {paddingHorizontal: 10, height: '84%', marginVertical: 5}]}
+       style={[styles.list, {paddingHorizontal: 10, marginVertical: 5}]}
        renderItem={({item})=><ProductCard {...item} onClick={()=>console.log("cartsale productcard")} cart={true} />}
        renderHiddenItem={({item})=><RenderHiddenItem item={item} rowClose={rowClose} editQty={editQty} deleteItemCart={deleteItemCart} />}
        rightOpenValue={-200}
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     total: {
-        padding: 10,
+        paddingTop: 10,
         flexDirection: 'row',
         justifyContent: 'space-around',
         alignItems: 'center',
@@ -64,6 +64,7 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       borderColor: '#D9D9D9',
       borderRadius: 15,
-      marginVertical: 15
+      marginVertical: 15,
+      flex: 1
     },
 })

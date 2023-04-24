@@ -4,6 +4,7 @@ import React, { useState, createContext, useEffect, useContext } from 'react'
 import { useDate } from '../hooks/useDate'
 import { useAlert } from './AlertContext'
 import { useLoading } from './LoadingContext'
+import { useAuth } from './AuthContext'
 const io = require('socket.io-client')
 
 const socket = io('https://gzapi.onrender.com')
@@ -21,6 +22,7 @@ export function PackingSaleProvider(props) {
     const [qtyMiss, setQtyMiss] = useState([])
     const {openAlert} = useAlert()
     const  {setOpen} = useLoading()
+    const {token} = useAuth()
 
     //para agregar o quitar ventas a la lista seleccionada
 
@@ -40,9 +42,13 @@ export function PackingSaleProvider(props) {
         if(indexPacking === listSelected.length-1) {
             setOpen(true)
             listSelected.map(item=>{
-                axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "armado"})
+                axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "armado"},
+                {
+                    headers: {
+                      Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+                    }
+                  })
                 .then(function(response){
-                    console.log(item)
                     openAlert("SE ACTUALIZARON EL ESTADO DE LAS VENTAS!", '#B6E2A1')
                     socket.emit('venta', {...item,estado: "armado"});
                     setOpen(false)
@@ -86,7 +92,12 @@ export function PackingSaleProvider(props) {
         if(indexPacking === listSelected.length-1) {
             setOpen(true)
             listSelected.map(item=>{
-                axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "entregado"})
+                axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "entregado"},
+                {
+                    headers: {
+                      Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+                    }
+                  })
                 .then(function(response){
                     openAlert("SE ACTUALIZARON EL ESTADO DE LAS VENTAS!", '#B6E2A1')
                     socket.emit('venta', {...item,estado: "entregado"});
@@ -94,7 +105,7 @@ export function PackingSaleProvider(props) {
                 })
                 .catch(function(error){
                     console.log("post",error);
-                })
+                }) 
             })
             navigation.popToTop()
             setListSelected([])
@@ -149,7 +160,12 @@ export function PackingSaleProvider(props) {
     const changeSale = (sale) => {
         //cambia el saleactive y trae productos de la venta
         if(sale){
-            axios.get(`https://gzapi.onrender.com/lineaVenta/${sale._id}`)
+            axios.get(`https://gzapi.onrender.com/lineaVenta/${sale._id}`,
+            {
+                headers: {
+                  Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+                }
+              })
                 .then(function(response){
                     setSaleActive({...sale , lineaVenta: response.data.body})
                 })

@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         color: '#7F8487',
         borderColor: '#D9D9D9',
-        fontSize: 12
+        fontSize: 16
     },
     shadow: {
       shadowColor: "#000",

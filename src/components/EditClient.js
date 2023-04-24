@@ -7,6 +7,7 @@ import Modal from './Modal'
 import InputListAdd from './InputListAdd'
 import { useAlert } from '../context/AlertContext'
 import { useLoading } from '../context/LoadingContext'
+import { useAuth } from '../context/AuthContext'
 const axios = require('axios').default;
 
 const io = require('socket.io-client')
@@ -18,6 +19,7 @@ export default function EditClient({onClose, item}) {
     const [openModalSearch, setOpenModalSearch] = useState(false)
     const {openAlert} = useAlert()
     const { setOpen } = useLoading()
+    const {token} = useAuth()
 
     const formik = useFormik({
         initialValues: initialValues(item),
@@ -26,7 +28,11 @@ export default function EditClient({onClose, item}) {
             if(formValue.apellido !== '' && formValue.nombre !== ''){
                 onClose()
                 setOpen(true)
-                axios.patch(`https://gzapi.onrender.com/cliente/${formValue._id}`, formValue)
+                axios.patch(`https://gzapi.onrender.com/cliente/${formValue._id}`, formValue, {
+                    headers: {
+                      Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+                    }
+                  })
                 .then(function(response){
                     socket.emit('cliente', formValue);
                     setOpen(false)

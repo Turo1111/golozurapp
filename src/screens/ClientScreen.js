@@ -14,6 +14,7 @@ import EditIcon from 'react-native-vector-icons/AntDesign'
 import InfoClient from '../components/InfoClient'
 import EditClient from '../components/EditClient'
 import Loading from '../components/Loading'
+import { useAuth } from '../context/AuthContext'
 const axios = require('axios').default;
 
 const io = require('socket.io-client')
@@ -41,9 +42,15 @@ export default function ClientScreen() {
 
   const listClient = useSearch(search.value, tag, data)
 
+  const {token} = useAuth()
+
   useEffect(()=>{
     setLoading(true)
-    axios.get(`https://gzapi.onrender.com/cliente`)
+    axios.get(`https://gzapi.onrender.com/cliente`,{
+      headers: {
+        Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+      }
+    })
     .then(function(response){
       setLoading(false)
       setData(response.data.body)
@@ -54,35 +61,22 @@ export default function ClientScreen() {
   },[newClient])
 
   useEffect(()=>{
-    /* const socket = io('https://gzapi.onrender.com')
-    socket.on('cliente', (cliente) => {
-      const exist = data.some(elem => elem._id === cliente._id )
-      let array = data.map((item)=> item._id === cliente._id ? cliente : item)
-      exist ? setData(array) : setData((prevData)=>[...prevData, cliente])
-      openAlert("NUEVO CLIENTE AGREGADO", "#B6E2A1")
-    })
-    return () => {
-      socket.disconnect();
-    }; */
     const socket = io('https://gzapi.onrender.com')
     socket.on('cliente', (cliente) => {
-      const exist = data.find(elem => elem._id === cliente._id )
-      if (exist) {
-        // Si existe, actualizamos sus valores sin perder los demás
-        setData((prevList) =>
-          prevList.map((item) =>
+      setData((prevData)=>{
+        const exist = prevData.find(elem => elem._id === cliente._id )
+        if (exist) {
+          // Si existe, actualizamos sus valores sin perder los demás
+          openAlert("CLIENTE MODIFICADO", "#B6E2A1")
+          return prevData.map((item) =>
             item._id === cliente._id ? cliente : item
           )
-        );
-        openAlert("CLIENTE MODIFICADO", "#B6E2A1")
-      } else {
-        // Si no existe, agregamos el nuevo producto a la lista
-        setData((prevList) => [
-          ...prevList,
-          cliente,
-        ]);
-        openAlert("NUEVO CLIENTE AGREGADO", "#B6E2A1")
-      }
+        } else {
+          // Si no existe, agregamos el nuevo producto a la lista
+          openAlert("NUEVO CLIENTE AGREGADO", "#B6E2A1")
+          return [...prevData, cliente]
+        }
+      })
     })
     return () => {
       socket.disconnect();
@@ -97,9 +91,9 @@ export default function ClientScreen() {
     <View style={styles.content}>
       <View style={{paddingHorizontal: 15, flexDirection: 'row', alignItems: 'center'}} >
         <Search placeholder={'Buscar cliente'} width={'65%'} searchInput={search} />
-        <Button text={'Nuevo'} fontSize={14} width={'30%'} onPress={()=>setOpenBS(true)} />
+        <Button text={'Nuevo'} fontSize={18} width={'30%'} onPress={()=>setOpenBS(true)} />
       </View>
-      <View style={{paddingHorizontal: 15}}>
+      <View style={{paddingHorizontal: 15, flex: 1}}>
       <SwipeListView
           data={listClient}
           renderItem={({item})=><ClientCard item={item} onPress={()=>setInfoClient(item)} />}
@@ -143,7 +137,7 @@ export default function ClientScreen() {
           <NewClient onClose={()=>setOpenBS(false)} />
         </View>
       </MyBottomSheet>
-      <MyBottomSheet open={openInfo} onClose={()=>setOpenInfo(false)} height={210} >
+      <MyBottomSheet open={openInfo} onClose={()=>setOpenInfo(false)} height={230} >
         <View style={{paddingVertical: 10, paddingHorizontal: 15}}>
           <InfoClient onClose={()=>setOpenInfo(false)} item={infoClient} />
         </View>
@@ -159,9 +153,10 @@ export default function ClientScreen() {
 
 const styles = StyleSheet.create({
     content: {
-        marginTop: 30,
         backgroundColor: '#fff',
-        height: '100%'
+        height: '100%',
+        paddingVertical: 15,
+        flex: 1
     },
     list: {
       paddingHorizontal: 15,

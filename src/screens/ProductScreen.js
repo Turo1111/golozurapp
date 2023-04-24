@@ -1,14 +1,9 @@
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
 import React, {useEffect, useRef, useState} from 'react'
 import Search from '../components/Search'
-import Slider from 'react-native-vector-icons/FontAwesome'
-import ListSale from '../components/ListSale'
-import ItemSale from '../components/ItemSale'
 import Button from '../components/Button'
 import ProductCard from '../components/ProductCard'
-import BottomSheet from "react-native-gesture-bottom-sheet";
 import NewProduct from '../components/NewProduct'
-import Modal from '../components/Modal'
 import { useAlert } from '../context/AlertContext'
 import { useInputValue } from '../hooks/useInputValue'
 import { useSearch } from '../hooks/useSearch'
@@ -20,6 +15,7 @@ import InfoProduct from '../components/InfoProduct'
 import EditProduct from '../components/EditProduct'
 import axios from 'axios'
 import Loading from '../components/Loading'
+import { useAuth } from '../context/AuthContext'
 
 const io = require('socket.io-client')
 
@@ -37,6 +33,7 @@ export default function ProductScreen() {
   const {openAlert} = useAlert()
   const [infoProduct, setInfoProduct] = useState(undefined)
   const [loading, setLoading] = useState(false)
+  const {token} = useAuth()
 
   const search = useInputValue('','')
 
@@ -46,7 +43,12 @@ export default function ProductScreen() {
 
   useEffect(()=>{
     setLoading(true)
-    axios.get(`https://gzapi.onrender.com/producto`)
+    axios.get(`https://gzapi.onrender.com/producto`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+      }
+    })
     .then(function(response){
       setLoading(false)
       setData(response.data.body)
@@ -59,26 +61,21 @@ export default function ProductScreen() {
   useEffect(()=>{
     const socket = io('https://gzapi.onrender.com')
     socket.on('producto', (producto) => {
-      const exist = data.find(elem => elem._id === producto._id )
-      if (exist) {
-        // Si existe, actualizamos sus valores sin perder los demás
-        setData((prevList) =>
-          prevList.map((item) =>
-            item._id === producto._id ? {
-              ...producto,
-              categoria: producto.categoria.descripcion,
-            } : item
+      setData((prevData)=>{
+        const exist = prevData.find(elem => elem._id === producto._id )
+        if (exist) {
+          // Si existe, actualizamos sus valores sin perder los demás
+          openAlert("PRODUCTO MODIFICADO", "#B6E2A1")
+          return prevData.map((item) =>
+            item._id === producto._id ? producto : item
           )
-        );
-        openAlert("PRODUCTO MODIFICADO", "#B6E2A1")
-      } else {
-        // Si no existe, agregamos el nuevo producto a la lista
-        setData((prevList) => [
-          ...prevList,
-          { ...producto, categoria: producto.categoria.descripcion },
-        ]);
-        openAlert("NUEVO PRODUCTO AGREGADO", "#B6E2A1")
-      }
+        } 
+        else {
+          // Si no existe, agregamos el nuevo producto a la lista
+          openAlert("NUEVO PRODUCTO AGREGADO", "#B6E2A1")
+          return [...prevData, producto]
+          }
+      })
     })
     return () => {
       socket.disconnect();
@@ -93,12 +90,12 @@ export default function ProductScreen() {
     <View style={styles.content}>
       <View style={{paddingHorizontal: 15, flexDirection: 'row', alignItems: 'center'}} >
         <Search placeholder={'Buscar producto'} width={'65%'} searchInput={search} />
-        <Button text={'Nuevo'} fontSize={14} width={'30%'} onPress={()=>{
+        <Button text={'Nuevo'} fontSize={18} width={'30%'} onPress={()=>{
           setOpenBS(true)
           setInfoProduct(undefined)
         }} />
       </View>
-      <View style={{paddingHorizontal: 15}}>
+      <View style={{paddingHorizontal: 15, flex: 1}}>
         
         <SwipeListView
           data={listProduct}
@@ -148,7 +145,7 @@ export default function ProductScreen() {
           <EditProduct  item={infoProduct} onClose={()=>setOpenEdit(false)}/>
         </View>
       </MyBottomSheet>
-      <MyBottomSheet open={openInfo} onClose={()=>setOpenInfo(false)} height={380} >
+      <MyBottomSheet open={openInfo} onClose={()=>setOpenInfo(false)} height={400} >
         <InfoProduct item={infoProduct} />
       </MyBottomSheet>
     </View>
@@ -157,9 +154,10 @@ export default function ProductScreen() {
 
 const styles = StyleSheet.create({
     content: {
-        marginTop: 30,
         backgroundColor: '#fff',
-        height: '100%'
+        height: '100%',
+        flex: 1,
+        paddingVertical: 15
     },
     list: {
       paddingHorizontal: 15,

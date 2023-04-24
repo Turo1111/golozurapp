@@ -23,19 +23,19 @@ export default function ItemSale({item, onPress}) {
   return (
     <Pressable style={{borderBottomColor: '#d1d1d1', borderBottomWidth: 1, paddingVertical: 10, backgroundColor: isSelected && 'rgba(35,102,203,0.5)' }} onPress={()=>addDeleteSale(item)} >
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.cliente?.apellido}, {item?.cliente?.nombre}</Text>
-        <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: '#7F8487'}}>{item?.fechaPre}</Text>
+        <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.cliente?.apellido}, {item?.cliente?.nombre}</Text>
+        <Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: '#7F8487'}}>{item?.fechaPre}</Text>
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.cliente?.direccion[0]?.calle} {item?.cliente?.direccion[0]?.numero} , {item?.cliente?.direccion[0]?.ciudad}</Text>
-        <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: color()}}>{item?.estado}</Text>
+        <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.cliente?.direccion[0]?.calle} {item?.cliente?.direccion[0]?.numero} , {item?.cliente?.direccion[0]?.ciudad}</Text>
+        <Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: color()}}>{item?.estado}</Text>
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <View style={{flexDirection: 'row'}}>
-            <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: '#7F8487', marginEnd: 10}}>X</Text>
-            <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>Productos</Text>
+            <Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: '#7F8487', marginEnd: 10}}>X</Text>
+            <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>Productos</Text>
         </View>
-        <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: '#7F8487'}}>${item?.total}</Text>
+        <Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: '#7F8487'}}>${item?.total}</Text>
       </View>
     </Pressable>
   )

@@ -7,6 +7,7 @@ import Modal from './Modal'
 import InputListAdd from './InputListAdd'
 import { useAlert } from '../context/AlertContext'
 import { useLoading } from '../context/LoadingContext'
+import { useAuth } from '../context/AuthContext'
 const axios = require('axios').default;
 
 const io = require('socket.io-client')
@@ -18,6 +19,7 @@ export default function NewClient({onClose}) {
     const [openModalSearch, setOpenModalSearch] = useState(false)
     const {openAlert} = useAlert()
     const { setOpen } = useLoading()
+    const {token} = useAuth()
 
     const formik = useFormik({
         initialValues: initialValues(),
@@ -26,7 +28,12 @@ export default function NewClient({onClose}) {
             if(formValue.apellido !== '' && formValue.nombre !== '' && formValue.email !== ''){
                 setOpen(true)
                 onClose()
-                axios.post(`https://gzapi.onrender.com/cliente`, formValue)
+                axios.post(`https://gzapi.onrender.com/cliente`, formValue,
+                {
+                    headers: {
+                      Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+                    }
+                  })
                 .then(function(response){
                     socket.emit('cliente', formValue);
                     setOpen(false)
@@ -44,32 +51,32 @@ export default function NewClient({onClose}) {
   return (
     <View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-            <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Nombre :</Text>
+            <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Nombre :</Text>
             <TextInput placeholder={''} style={[styles.input]}
                 value={formik.values.nombre}
                 onChangeText={(text)=> formik.setFieldValue('nombre', text)}
             />
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-            <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Apellido :</Text>
+            <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Apellido :</Text>
             <TextInput placeholder={''} style={[styles.input]}
                 value={formik.values.apellido}
                 onChangeText={(text)=> formik.setFieldValue('apellido', text)}
             />
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-            <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Email :</Text>
+            <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Email :</Text>
             <TextInput placeholder={''} style={[styles.input]}
                 value={formik.values.email}
                 onChangeText={(text)=> formik.setFieldValue('email', text)}
             />
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-            <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Telefono :</Text>
+            <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Telefono :</Text>
             <InputListAdd data={formik.values.telefono} onChangeData={(data)=>formik.setFieldValue("telefono",data)} width={90} />
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center'}}>
-            <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Direcciones :</Text>
+            <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Direcciones :</Text>
             <TextInput placeholder={formik.values.direccion.ciudad === '' ? 'Direcciones' : 
                     `${formik.values.direccion[0].ciudad}, ${formik.values.direccion[0].calle}, ${formik.values.direccion[0].numero}`
                 }  
@@ -78,11 +85,11 @@ export default function NewClient({onClose}) {
             <Pressable style={{}} onPress={()=>{
                 setOpenModalSearch(true)
             }} >
-                <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Abrir</Text>
+                <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', color: '#7F8487' }}>Abrir</Text>
             </Pressable>
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'center', marginVertical: 5}} >
-            <Button text={'Agregar'} onPress={formik.handleSubmit}  fontSize={14} width={'30%'} />
+            <Button text={'Agregar'} onPress={formik.handleSubmit}  fontSize={16} width={'30%'} />
         </View>
         <ModalSearch open={openModalSearch} onClose={()=>{
             setOpenModalSearch(false)
@@ -102,7 +109,7 @@ const styles = StyleSheet.create({
         color: '#7F8487',
         borderColor: '#D9D9D9',
         width: '70%',
-        fontSize: 12,
+        fontSize: 16,
     },
 })
 

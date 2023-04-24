@@ -1,10 +1,6 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { Button, FlatList, Modal, StyleSheet, Text, TextInput, TouchableHighlight, View } from 'react-native'
-import Icon from 'react-native-vector-icons/SimpleLineIcons'
+import React, { useEffect, useRef, useState } from 'react'
+import { FlatList, StyleSheet, Text, View, SafeAreaView } from 'react-native'
 import ProductCard from '../components/ProductCard';
-import { useFonts } from '@expo-google-fonts/inter';
-import { SafeAreaView, TouchableOpacity } from "react-native";
-import BottomSheet from "react-native-gesture-bottom-sheet";
 import CartSale from '../components/CartSale';
 import ClientSale from '../components/ClientSale';
 import ResumeSale from '../components/ResumeSale';
@@ -16,18 +12,18 @@ import { useInputValue } from '../hooks/useInputValue';
 import { useSearch } from '../hooks/useSearch';
 import MyBottomSheet from '../components/MyBottomSheet';
 import Loading from '../components/Loading';
+import { useAuth } from '../context/AuthContext';
 const axios = require('axios').default;
 
 
 export default function NewSaleScreen() {
 
-  const bottomSheet = useRef();
   const [openModal, setOpenModal] = useState(false)
   const [itemProduct, setItemProduct] = useState(undefined)
   const [products, setProducts] = useState([])
-  const [clients, setClients] = useState([])
   const [openBS, setOpenBS] = useState(false)
   const [loading, setLoading] = useState(false)
+  const {token} = useAuth()
 
   const search = useInputValue('','')
 
@@ -39,7 +35,12 @@ export default function NewSaleScreen() {
 
   useEffect(()=>{
     setLoading(true)
-    axios.get(`https://gzapi.onrender.com/producto`)
+    axios.get(`https://gzapi.onrender.com/producto`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+      }
+    })
     .then(function(response){
       setLoading(false)
       setProducts(response.data.body)
@@ -61,13 +62,14 @@ export default function NewSaleScreen() {
   }
 
 return (
-  <View style={styles.content}>
+  <SafeAreaView style={styles.content}>
     <View>
       <Text
         style={{
           color: '#9E9E9E',
           paddingVertical: 5,
-          paddingHorizontal: 15 
+          paddingHorizontal: 15,
+          fontSize: 18 
         }}
       >Nueva venta</Text>
     </View>
@@ -88,18 +90,17 @@ return (
     />
     <ResumeBottomSheet onPress={() => setOpenBS(true)} />
     <MyBottomSheet open={openBS} onClose={()=>setOpenBS(false)} height={0} >
-      <SliderSale itemSlide={[<CartSale/>, <ClientSale data={clients} />, <ResumeSale/>]} onCloseSheet={()=>setOpenBS(false)} />
+      <SliderSale itemSlide={[<CartSale/>, <ClientSale />, <ResumeSale/>]} onCloseSheet={()=>setOpenBS(false)} />
     </MyBottomSheet>
     {
       itemProduct !== undefined && <AddProduct openModal={openModal} onClose={()=>setOpenModal(false)} item={itemProduct} />
     }
-  </View>
+  </SafeAreaView>
 )
 }
 
 const styles = StyleSheet.create({
   content: {
-      marginTop: 30,
       position: 'relative',
       backgroundColor: '#Fff',
       height: '100%'

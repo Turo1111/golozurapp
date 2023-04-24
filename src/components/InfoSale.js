@@ -20,23 +20,23 @@ export default function InfoSale({info}) {
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
     return (
-        <View>
-            <Text style={{fontSize: 14, fontWeight: '600', fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Numero de venta : #{info._id}</Text>
+        <View style={{padding: 15, flex: 1}}>
+            <Text style={{fontSize: 16, fontWeight: '600', fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Numero de venta : #{info._id}</Text>
             <View style={{padding: 5}}>
-                <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Cliente : {info.cliente.apellido} , {info.cliente.nombre}</Text>
-                <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Direccion : {info.cliente.direccion.calle} {info.cliente.direccion.numero} , {info.cliente.direccion.ciudad}</Text>
+                <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Cliente : {info.cliente.apellido} , {info.cliente.nombre}</Text>
+                <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Direccion : {info.cliente.direccion[0].calle} {info.cliente.direccion[0].numero} , {info.cliente.direccion[0].ciudad}</Text>
             </View>
             <View style={{paddingVertical: 3, paddingHorizontal: 25}}>
                 <Divider width={1} insetType={'middle'} />
             </View>
             <View style={{padding: 5}}>
-                <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Estado : 
-                    <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: color()}}> {info.estado} </Text>
+                <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Estado : 
+                    <Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: color()}}> {info.estado} </Text>
                 </Text>
-                <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >FechaPreventa : {info.fechaPre}</Text>
-                <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Fecha Entrega : {info.fechaEntrega || 'no entregado'}</Text>
+                <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >FechaPreventa : {info.fechaPre}</Text>
+                <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Fecha Entrega : {info.fechaEntrega || 'no entregado'}</Text>
                 <View style={{flexDirection: 'row', alignItems: 'center'}} >
-                    <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Modificaciones : </Text>
+                    <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Modificaciones : </Text>
                     <Switch
                       trackColor={{false: '#767577', true: '#81b0ff'}}
                       thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
@@ -46,15 +46,17 @@ export default function InfoSale({info}) {
                     />
                 </View>
             </View>
-            <FlatList
-                data={info.lineaVenta}
-                style={[styles.list, {paddingHorizontal: 10, height: '55%', marginVertical: 5}]}
-                renderItem={({item})=><ProductCard {...item} cart={true} />}
-            />
+            <View style={{flex: 1}} > 
+                <FlatList
+                    data={info.lineaVenta}
+                    style={styles.list}
+                    renderItem={({item})=><ProductCard {...item} cart={true} />}
+                />
+            </View>
             <View style={{padding: 5}}>
-                <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Descuento : {info.descuento || 'No hay descuento aplicado'}</Text>
-                <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Total : 
-                    <Text style={{fontSize: 14, fontFamily: 'Cairo-Bold', color: '#7F8487'}} > $ {info.total}</Text>
+                <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Descuento : {info.descuento || 'No hay descuento aplicado'}</Text>
+                <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}} >Total : 
+                    <Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: '#7F8487'}} > $ {info.total}</Text>
                 </Text>
             </View>
         </View>
@@ -65,11 +67,9 @@ const styles = StyleSheet.create({
     
     list: {
         paddingHorizontal: 15,
-        marginHorizontal: 15,
         paddingVertical: 5,
         borderWidth: 1,
         borderColor: '#D9D9D9',
         borderRadius: 15,
-        marginVertical: 15
       },
 })

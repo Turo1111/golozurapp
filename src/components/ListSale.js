@@ -4,10 +4,10 @@ import Icon from 'react-native-vector-icons/Ionicons'
 import ItemSale from './../components/ItemSale';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { TouchableOpacity, TouchableHighlight } from 'react-native';
-import BottomSheet from "react-native-gesture-bottom-sheet";
 import InfoSale from './InfoSale';
 import axios from 'axios';
 import MyBottomSheet from './MyBottomSheet';
+import { useAuth } from '../context/AuthContext';
 
 
 export default function ListSale({height='50%', renderItem, renderHiddenItem, rightOpenValue, listSale}) {
@@ -15,9 +15,10 @@ export default function ListSale({height='50%', renderItem, renderHiddenItem, ri
     const bottomSheet = useRef();
     const [saleInfo, setSaleInfo] = useState(undefined)
     const [openBS, setOpenBS] = useState(false)
+    const {token} = useAuth()
 
   return (
-    <View style={{paddingHorizontal: 15}} >
+    <View style={{paddingHorizontal: 15, flex: 1}} >
         <SwipeListView
             data={listSale}
             ListEmptyComponent={
@@ -39,7 +40,12 @@ export default function ListSale({height='50%', renderItem, renderHiddenItem, ri
                         <TouchableOpacity
                             style={[styles.backRightBtn, styles.backRightBtnRight]}
                             onPress={async ()=>{
-                                await axios.get(`https://gzapi.onrender.com/lineaVenta/${data.item._id}`)
+                                await axios.get(`https://gzapi.onrender.com/lineaVenta/${data.item._id}`,
+                                {
+                                    headers: {
+                                      Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+                                    }
+                                })
                                 .then(function(response){
                                     console.log(response.data.body)
                                     setSaleInfo({...data.item , lineaVenta: response.data.body})
@@ -61,7 +67,7 @@ export default function ListSale({height='50%', renderItem, renderHiddenItem, ri
             previewOpenValue={-40}
             previewOpenDelay={3000}
         />
-        <MyBottomSheet open={openBS} onClose={()=>setOpenBS(false)} height={600} >
+        <MyBottomSheet open={openBS} onClose={()=>setOpenBS(false)} height={680} >
             <InfoSale info={saleInfo} />
         </MyBottomSheet>
     </View>

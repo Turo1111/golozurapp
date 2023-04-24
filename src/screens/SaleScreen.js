@@ -12,6 +12,7 @@ import { useInputValue } from '../hooks/useInputValue';
 import { useSearch } from '../hooks/useSearch';
 import Loading from '../components/Loading';
 import { useAlert } from '../context/AlertContext';
+import { useAuth } from '../context/AuthContext';
 const axios = require('axios').default;
 
 const io = require('socket.io-client')
@@ -31,10 +32,16 @@ export default function SaleScreen() {
     const tag = [{"cliente": ["nombre", "apellido"]}, "total"]
     const listSale = useSearch(search.value, tag, filterSale)
     const {openAlert} = useAlert()
+    const {token} = useAuth()
 
     useEffect(()=>{
       setLoading(true)
-      axios.get(`https://gzapi.onrender.com/venta`)
+      axios.get(`https://gzapi.onrender.com/venta`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+        }
+      })
       .then(function(response){
         setLoading(false)
         setFilterSale(response.data.body)
@@ -44,28 +51,25 @@ export default function SaleScreen() {
       })
     },[newSale])
 
+    /* useEffect(()=>console.log("lista sale 1",filterSale.length),[filterSale]) */
+
     useEffect(()=>{
       const socket = io('https://gzapi.onrender.com')
       socket.on('venta', (venta) => {
-        /* console.log(venta)
-        console.log(filterSale) */
-        const exist = filterSale.find(elem => elem._id === venta._id )
-        console.log(exist)
-        if (exist) {
-          // Si existe, actualizamos sus valores sin perder los demás
-          console.log('ya existe')
-          setFilterSale((prevData) =>
-            prevData.map((item) =>
+        setFilterSale((prevData)=>{
+          const exist = prevData.find(elem => elem._id === venta._id )
+          if (exist) {
+            // Si existe, actualizamos sus valores sin perder los demás
+            openAlert("VENTA MODIFICADA", "#B6E2A1")
+            return prevData.map((item) =>
               item._id === venta._id ? venta : item
             )
-          );
-          openAlert("VENTA MODIFICADA", "#B6E2A1")
-        } else {
-          // Si no existe, agregamos el nuevo producto a la lista
-          setFilterSale((prevData)=>[...prevData, venta])
-          openAlert("NUEVA VENTA AGREGADA", "#B6E2A1")
-        }
-        
+          } else {
+            // Si no existe, agregamos el nuevo producto a la lista
+            openAlert("NUEVA VENTA AGREGADA", "#B6E2A1")
+            return [...prevData, venta]
+          }
+        })
       })
       return () => {
         socket.disconnect();
@@ -110,9 +114,10 @@ export default function SaleScreen() {
 
 const styles = StyleSheet.create({
     content: {
-        marginTop: 30,
         backgroundColor: '#fff',
-        height: '100%'
+        height: '100%',
+        flex: 1,
+        paddingVertical: 15
     },
     input: {
         height: 40,

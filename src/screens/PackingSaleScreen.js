@@ -13,9 +13,11 @@ export default function PackingSaleScreen({navigation}) {
   return (
     <View style={styles.content}>
         <PackingSaleCard length={listSelected.length} />
-        <View style={{flexDirection: 'row', justifyContent: 'space-around', marginTop: 10}} >
-            <Button text={indexPacking !== 0 ? "Atras" : "Cancelar"} onPress={()=>afterPacking(navigation)}/>
-            <Button text={indexPacking !== listSelected.length-1 ? "Siguiente" : "Terminar"} onPress={()=>nextPacking(navigation)} />
+        <View style={{flex: 1, justifyContent: 'flex-end'}}>
+          <View style={{flexDirection: 'row', justifyContent: 'space-around'}} >
+              <Button text={indexPacking !== 0 ? "Atras" : "Cancelar"} onPress={()=>afterPacking(navigation)}/>
+              <Button text={indexPacking !== listSelected.length-1 ? "Siguiente" : "Terminar"} onPress={()=>nextPacking(navigation)} />
+          </View>
         </View>
     </View>
   )
@@ -23,7 +25,6 @@ export default function PackingSaleScreen({navigation}) {
 
 const styles = StyleSheet.create({
     content: {
-      marginTop: 30,
       backgroundColor: '#fff',
       height: '100%',
       paddingVertical: 5

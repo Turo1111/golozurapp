@@ -55,18 +55,17 @@ export default function AddProduct({openModal, onClose, item}) {
       onRequestClose={onClose}
     >
       <View style={{width: '100%', height: '100%', backgroundColor: 'rgba(217,217,217,0.7)'}}>
-
         <View style={styles.modalView} >
             <View style={{flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end'}}>
-                <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#9E9E9E'}}>{item?.descripcion || "undefined"}</Text>
-                <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: '#9E9E9E'}}>{item?.peso?.cantidad || "undefined"} {item?.peso?.unidad  || "undefined"}</Text>
+                <Text style={{fontSize: 20, fontFamily: 'Cairo-Regular', color: '#9E9E9E'}}>{item?.descripcion || "undefined"}</Text>
+                <Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: '#9E9E9E'}}>{item?.peso?.cantidad || "undefined"} {item?.peso?.unidad  || "undefined"}</Text>
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#9E9E9E'}}>#{item?._id || "undefined"}</Text>
+                <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#9E9E9E'}}>#{item?._id || "undefined"}</Text>
             </View>
             <View style={{flexDirection: 'row', marginBottom: 5, justifyContent: 'space-between'}}>
-                <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#9E9E9E'}}><Text style={{fontFamily: 'Cairo-Bold', color: '#9E9E9E'}}>{item?.stock || "undefined"}</Text> unidades</Text>
-                <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: '#9E9E9E'}}>${item?.precioUnitario || "undefined"} u.</Text>
+                <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#9E9E9E'}}><Text style={{fontFamily: 'Cairo-Bold', color: '#9E9E9E'}}>{item?.stock || "undefined"}</Text> unidades</Text>
+                <Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: '#9E9E9E'}}>${item?.precioUnitario || "undefined"} u.</Text>
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center', marginTop: 10}}>
               <InputQty 
@@ -78,12 +77,12 @@ export default function AddProduct({openModal, onClose, item}) {
                 reset={reset}
               />
               <View style={{}}>
-                <Text style={{fontSize: 18, fontFamily: 'Cairo-Bold', color: '#7F8487', textAlign: 'center', marginBottom: 15}}>${total}</Text>
+                <Text style={{fontSize: 20, fontFamily: 'Cairo-Bold', color: '#7F8487', textAlign: 'center', marginBottom: 15}}>${total}</Text>
               </View>
             </View>
             <CheckBox
               center
-              title={<Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: '#7F8487'}}>Entrega inmediata</Text>}
+              title={<Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: '#7F8487'}}>Entrega inmediata</Text>}
               checked={dropProduct}
               onPress={() => setDropProduct(!dropProduct)}
             />
@@ -103,7 +102,6 @@ const styles = StyleSheet.create({
         marginHorizontal: 10,
         marginTop: '50%',
         width: '95%',
-        height: '42%',
         margin: 1,
         backgroundColor: "white",
         borderRadius: 15,

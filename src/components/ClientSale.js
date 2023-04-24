@@ -6,20 +6,21 @@ import { useSearch } from '../hooks/useSearch'
 import { useInputValue } from '../hooks/useInputValue'
 import axios from 'axios'
 import Loading from './Loading'
+import { useAuth } from '../context/AuthContext'
 
 export const ClientCard = ({item, onPress}) =>{
 
   return(
     <Pressable style={{paddingStart: 5, paddingVertical: 5, width: '100%', backgroundColor: '#fff'}} onPress={()=>onPress(item)}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.apellido} , {item?.nombre}</Text>
-            <Text style={{fontSize: 12, fontFamily: 'Cairo-Bold', color: item?.estado === "En forma" ? '#6BCB77' : '#F39D0B'}}>{item?.estado || "Sin estado"}</Text>
+            <Text style={{fontSize: 20, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.apellido} , {item?.nombre}</Text>
+            <Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: item?.estado === "En forma" ? '#6BCB77' : '#F39D0B'}}>{item?.estado || "Sin estado"}</Text>
         </View>
         <View style={{}}>
-            <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.direccion[0]?.calle || "No definido"} {item?.direccion[0]?.numero} , {item?.direccion[0]?.ciudad || "No definido"}</Text>
+            <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.direccion[0]?.calle || "No definido"} {item?.direccion[0]?.numero} , {item?.direccion[0]?.ciudad || "No definido"}</Text>
         </View>
         <View style={{}}>
-            <Text style={{fontSize: 12, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.telefono || "No definido"}</Text>
+            <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.telefono || "No definido"}</Text>
         </View>
         <View style={{borderBottomColor: '#d9d9d9', borderBottomWidth: 1, marginHorizontal: '10%', marginTop: 5}} ></View>
     </Pressable>
@@ -33,12 +34,17 @@ const ClientSale = ({}) => {
   const search = useInputValue('','')
   const [data, setData] = React.useState([])
   const [loading, setLoading] = React.useState(false)
+  const {token} = useAuth()
 
   const listClient = useSearch(search.value, ["nombre", "apellido"], data)
 
   React.useEffect(()=>{
     setLoading(true)
-    axios.get(`https://gzapi.onrender.com/cliente`)
+    axios.get(`https://gzapi.onrender.com/cliente`,{
+      headers: {
+        Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+      }
+    })
     .then(function(response){
       setLoading(false)
       setData(response.data.body)
@@ -53,16 +59,17 @@ const ClientSale = ({}) => {
   }
 
   return (
-    <View>
+    <View style={{flex: 1}}>
       <Text style={styles.title}>Elegir cliente</Text>
       <View style={styles.search}>
         <Search placeholder={'Buscar cliente'} searchInput={search} />
       </View>
-      <FlatList
-          data={listClient}
-          style={[styles.list, {paddingHorizontal: 10, height: '65%', marginVertical: 5}]}
-          renderItem={({item})=><ClientCard item={item}  onPress={(item)=>addClientCart(item)}/>}
-      />
+      <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 10, borderColor: '#d9d9d9', borderWidth: 1, flex: 1}} >
+        <FlatList
+            data={listClient}
+            renderItem={({item})=><ClientCard item={item}  onPress={(item)=>addClientCart(item)}/>}
+        />
+      </View>
       <View style={{borderBottomColor: '#d9d9d9', borderBottomWidth: 1, marginHorizontal: '10%', marginTop: 5}} ></View>
       <View style={{paddingHorizontal: 25}}>
         {client !== undefined && <ClientCard item={client}/>}
@@ -111,6 +118,6 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       borderColor: '#D9D9D9',
       borderRadius: 15,
-      marginVertical: 15
+      marginVertical: 15,
     },
 })

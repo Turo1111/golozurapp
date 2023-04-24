@@ -12,7 +12,8 @@ export default function LoginScreen({navigation}) {
 
     const {openAlert} = useAlert()
     const [loading, setLoading] = useState(false)
-    const {addUser} = useAuth()
+    const {addUser, addToken} = useAuth()
+    const {token} = useAuth()
 
     const formik = useFormik({
         initialValues: {
@@ -21,20 +22,27 @@ export default function LoginScreen({navigation}) {
         },
         validateOnChange: false,
         onSubmit: (formValue) => {
-           /*  setLoading(true)
-            axios.post(`https://gzapi.onrender.com/user/login`, formValue)
+           setLoading(true)
+            axios.post(`https://gzapi.onrender.com/user/login`, formValue,
+            {
+                headers: {
+                  Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+                }
+              })
             .then(function(response){
                 addUser(response.data.body)
+                addToken(response.data.token)
                 setLoading(false)
                 navigation.navigate('NavigationDrawer')
                 openAlert("LOGEADO CORRECTAMENTE CHE!", '#B6E2A1')
             })
             .catch(function(error){
                 console.log("post ",error);
+                setLoading(false)
                 openAlert("DATOS INCORRECTOS WACHO!", '#F7A4A4')
-            })  */
-            navigation.navigate('NavigationDrawer')
-            openAlert("LOGEADO CORRECTAMENTE CHE!", '#B6E2A1')
+            })  
+            /* navigation.navigate('NavigationDrawer')
+            openAlert("LOGEADO CORRECTAMENTE CHE!", '#B6E2A1') */
         }
     })
 
@@ -44,16 +52,16 @@ export default function LoginScreen({navigation}) {
 
   return (
     <View style={styles.content}>
-        <Text style={{fontSize: 22, fontFamily: 'Cairo-Regular', color: '#7F8487', marginVertical: 10, textAlign: 'center'}}>GOLOZUR APP</Text>
+        <Text style={{fontSize: 24, fontFamily: 'Cairo-Regular', color: '#7F8487', marginVertical: 10, textAlign: 'center'}}>GOLOZUR APP</Text>
         <View>
-            <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#7F8487', marginStart: '20%', marginVertical: 5,}}>Usuario</Text>
+            <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487', marginStart: '10%', marginVertical: 5,}}>Usuario</Text>
             <View style={{flexDirection: 'row', justifyContent: 'center'}} >
                 <TextInput placeholder={''} style={styles.input}
                     value={formik.values.usuario}
                     onChangeText={(text)=> formik.setFieldValue('usuario', text)}
                 />
             </View>
-            <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#7F8487', marginStart: '20%', marginVertical: 5}}>Contraseña</Text>
+            <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487', marginStart: '10%', marginVertical: 5}}>Contraseña</Text>
             <View style={{flexDirection: 'row', justifyContent: 'center'}} >
                 <TextInput placeholder={''} style={styles.input}
                     value={formik.values.password}
@@ -63,7 +71,7 @@ export default function LoginScreen({navigation}) {
             </View>
         </View>
         <View style={{flexDirection: 'row', justifyContent: 'center'}} >
-            <Button text={'INGRESAR'} fontSize={12} width={'30%'} style={{marginTop: 15}} onPress={formik.handleSubmit} />
+            <Button text={'INGRESAR'} fontSize={16} width={'30%'} style={{marginTop: 15}} onPress={formik.handleSubmit} />
         </View>
     </View>
   )
@@ -77,11 +85,13 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         color: '#7F8487',
         borderColor: '#D9D9D9',
-        width: '60%',
+        width: '80%',
         fontSize: 12
     },
     content: {
-        paddingTop: '40%',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
         padding: 15,
         backgroundColor: '#fff',
         height: '100%'

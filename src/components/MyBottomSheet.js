@@ -16,9 +16,7 @@ export default function MyBottomSheet({children, open, onClose, height = 90}) {
               <Pressable  onPress={onClose} style={{width: '100%', justifyContent: "center", alignItems: "center", marginVertical: 5}} >
                 <View style={{height: 8, width: 45, backgroundColor: '#d7d7d7', borderRadius: 50}}></View>
               </Pressable>
-              <View style={{height: '100%', width: '100%', paddingHorizontal: 15, paddingBottom: 10}}>
-                  {children}
-              </View>
+              {children}
           </View>
         </KeyboardAvoidingView>
       </View>

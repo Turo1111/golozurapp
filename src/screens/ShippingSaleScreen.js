@@ -24,7 +24,6 @@ export default function ShippingSaleScreen({navigation}) {
 
 const styles = StyleSheet.create({
     content: {
-      marginTop: 30,
       backgroundColor: '#fff',
       height: '100%',
       paddingVertical: 5

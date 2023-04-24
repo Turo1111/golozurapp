@@ -19,8 +19,8 @@ export default function HomeScreen({navigation}) {
           <Icon name='notifications-outline' color='#7F8487' size={30} 
           />
         </View>
-        <ScrollView  horizontal={true} style={{flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 5}}>
-          <Pressable style={{borderColor: '#d9d9d9d9', borderWidth: 1, padding: 8, margin: 5, borderRadius: 10, width: 100}}
+        <ScrollView  horizontal={true} style={{flexDirection: 'row', paddingVertical: 10, paddingHorizontal: 5, maxHeight: 110}}>
+          <Pressable style={{borderColor: '#d9d9d9d9', borderWidth: 1, padding: 8, margin: 5, borderRadius: 10, width: 100 }}
             onPress={()=>navigation.navigate('NewSale')}
           >
             <MaterialIcons name='point-of-sale' size={35} color='#9E9E9E' style={{textAlign: 'center'}} />
@@ -45,7 +45,7 @@ export default function HomeScreen({navigation}) {
             <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#9E9E9E', textAlign: 'center' }}>Clientes</Text>
           </Pressable>
         </ScrollView>
-        <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 10, borderColor: '#d9d9d9', borderWidth: 1, margin: 15}} >
+       <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 10, borderColor: '#d9d9d9', borderWidth: 1, margin: 15}} >
           <Text style={{fontSize: 18, fontFamily: 'Cairo-Bold', color: '#7F8487' }} >Ventas mes : Enero</Text> 
           <Divider style={{marginVertical: 5, paddingHorizontal: 35}} />
           <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
@@ -63,7 +63,7 @@ export default function HomeScreen({navigation}) {
             </View>
           </View>
         </View>
-        <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 10, borderColor: '#d9d9d9', borderWidth: 1, height: '50%', margin: 15}} >
+        <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 10, borderColor: '#d9d9d9', borderWidth: 1, flex: 1, margin: 15}} >
           <Text style={{fontSize: 18, fontFamily: 'Cairo-Bold', color: '#7F8487' }} >Actividades</Text> 
           <FlatList
             data={[1,3,4,2,5,6,7,8,9,0]}
@@ -73,7 +73,7 @@ export default function HomeScreen({navigation}) {
             </Text>
             }
           />
-        </View>
+        </View> 
     </SafeAreaView>
   )
 }
@@ -82,8 +82,8 @@ export default function HomeScreen({navigation}) {
 
 const styles = StyleSheet.create({
     content: {
-        marginTop: 30,
         backgroundColor: '#fff',
+        height: '100%'
     },
     search : {
         flex: 1

@@ -19,7 +19,7 @@ export default function Button({text, width,  onPress, disabled, icon , backgrou
         {
           icon && icon
         }
-        <Text style={{fontSize: fontSize ? fontSize : 14, fontFamily: 'Cairo-Bold', color: color ? color : '#7F8487' }}>{(text).toUpperCase()}</Text>
+        <Text style={{fontSize: fontSize ? fontSize : 16, fontFamily: 'Cairo-Bold', color: color ? color : '#7F8487' }}>{(text).toUpperCase()}</Text>
     </Pressable>
   )
 }
