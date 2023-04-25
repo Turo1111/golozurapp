@@ -228,7 +228,6 @@ const ModalSearch = ({open, onClose, title, enlace, onChangeText}) => {
 
     useEffect(() => {
         socket.on('categoria', (categoria) => {
-            console.log("frontend",categoria);
             setData((prevData)=>[...prevData, categoria])
         })
         /* return () => {

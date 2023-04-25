@@ -13,7 +13,6 @@ export default function LoginScreen({navigation}) {
     const {openAlert} = useAlert()
     const [loading, setLoading] = useState(false)
     const {addUser, addToken} = useAuth()
-    const {token} = useAuth()
 
     const formik = useFormik({
         initialValues: {
@@ -23,14 +22,9 @@ export default function LoginScreen({navigation}) {
         validateOnChange: false,
         onSubmit: (formValue) => {
            setLoading(true)
-            axios.post(`https://gzapi.onrender.com/user/login`, formValue,
-            {
-                headers: {
-                  Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
-                }
-              })
+            axios.post(`https://gzapi.onrender.com/user/login`, {...formValue, usuario: (formValue.usuario).toLowerCase()})
             .then(function(response){
-                addUser(response.data.body)
+                addUser(response.data.data)
                 addToken(response.data.token)
                 setLoading(false)
                 navigation.navigate('NavigationDrawer')
@@ -45,6 +39,8 @@ export default function LoginScreen({navigation}) {
             openAlert("LOGEADO CORRECTAMENTE CHE!", '#B6E2A1') */
         }
     })
+
+    
 
     if (loading) {
         return <Loading/>

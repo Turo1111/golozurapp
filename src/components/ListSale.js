@@ -47,7 +47,6 @@ export default function ListSale({height='50%', renderItem, renderHiddenItem, ri
                                     }
                                 })
                                 .then(function(response){
-                                    console.log(response.data.body)
                                     setSaleInfo({...data.item , lineaVenta: response.data.body})
                                     setOpenBS(true)
                                 })

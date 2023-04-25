@@ -42,7 +42,27 @@ export function PackingSaleProvider(props) {
         if(indexPacking === listSelected.length-1) {
             setOpen(true)
             listSelected.map(item=>{
-                axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "armado"},
+                if (item.lineaVenta) {
+                    item.lineaVenta.map(prd=> prd.modificado && 
+                        axios.post(`https://gzapi.onrender.com/lineaVenta`, 
+                            {
+                                ...prd,
+                                _id: undefined
+                            },
+                            {
+                                headers: {
+                                  Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+                                }
+                              }
+                        )
+                        .then(function(r){
+                        })
+                        .catch(function(error){
+                            console.log("post",error);
+                        })
+                    )
+                }
+                axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "armado", total: item.total},
                 {
                     headers: {
                       Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
@@ -65,7 +85,6 @@ export function PackingSaleProvider(props) {
             navigation.navigate('Sale')
         }
         else {
-
             setOpen(true)
             setListSelected(
                 listSelected.map(elem => elem._id === saleActive._id ? elem = saleActive : elem)
@@ -92,7 +111,23 @@ export function PackingSaleProvider(props) {
         if(indexPacking === listSelected.length-1) {
             setOpen(true)
             listSelected.map(item=>{
-                axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "entregado"},
+                if (item.lineaVenta) {
+                    item.lineaVenta.map(prd=> prd.modificado && 
+                        axios.patch(`https://gzapi.onrender.com/lineaVenta/${prd._id}`, prd,
+                            {
+                                headers: {
+                                  Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+                                }
+                              }
+                        )
+                        .then(function(r){
+                        })
+                        .catch(function(error){
+                            console.log("post",error);
+                        })
+                    )
+                }
+                axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "entregado", total: item.total},
                 {
                     headers: {
                       Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
@@ -105,7 +140,8 @@ export function PackingSaleProvider(props) {
                 })
                 .catch(function(error){
                     console.log("post",error);
-                }) 
+                })  
+                setOpen(false)
             })
             navigation.popToTop()
             setListSelected([])
@@ -131,24 +167,27 @@ export function PackingSaleProvider(props) {
     }
 
     const editQty = (item) => {
-        console.log(item)
+        
         const lineaVenta = saleActive.lineaVenta.map(prd=> prd._id === item._id ? prd = item : prd )
         const total = lineaVenta.reduce( (accumulator, currentValue) => {
             return (parseFloat(accumulator) + parseFloat(currentValue.total)).toFixed(2)
         }, 0)
-        
-        setSaleActive({
-            ...saleActive,
-            lineaVenta : lineaVenta,
-            total: total
+        setSaleActive( (prevData) =>{
+            return {
+                ...prevData,
+                lineaVenta : lineaVenta,
+                total: total
+            }
         })
+        setListSelected((prevData)=>{
+            return prevData.map((sale) =>
+                sale._id === saleActive._id ? {...saleActive, lineaVenta : lineaVenta, total: total} : sale
+            )
+        }) 
     }
 
     const deleteItemCart = (item) => {
-        setSaleActive({
-            ...saleActive,
-            lineaVenta : saleActive.lineaVenta.filter(obj => item._id !== obj._id)
-        })
+        //NO SE USA
     }
 
     const qtyChange = (id) => {
@@ -167,7 +206,25 @@ export function PackingSaleProvider(props) {
                 }
               })
                 .then(function(response){
-                    setSaleActive({...sale , lineaVenta: response.data.body})
+                    const busqueda = response.data.body.reduce((acc, item) => {
+                        acc[item.idProducto] = ++acc[item.idProducto] || 0;
+                        return acc;
+                      }, {});
+                  
+                      const duplicados = response.data.body.filter( (item) => {
+                        return busqueda[item.idProducto];
+                      });
+                  
+                      let lv = response.data.body.filter((item)=>{
+                        if(item.idProducto === duplicados[0]?.idProducto && item.modificado === true ){
+                            return item
+                        }
+                        if (item.idProducto !== duplicados[0]?.idProducto && item.modificado === false ) {
+                            return item
+                        }
+                      })
+                      console.log("response filtrada",lv)
+                    setSaleActive({...sale , lineaVenta: lv})
                 })
                 .catch(function(error){
                     console.log("error aqui ",error);

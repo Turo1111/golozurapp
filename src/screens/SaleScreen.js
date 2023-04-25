@@ -29,7 +29,7 @@ export default function SaleScreen() {
     const [loading, setLoading] = useState(false)
     const {startPacking, startShipping} = usePacking()
     const search = useInputValue('','')
-    const tag = [{"cliente": ["nombre", "apellido"]}, "total"]
+    const tag = [{"cliente": ["nombre", "apellido"]}, "total", 'estado']
     const listSale = useSearch(search.value, tag, filterSale)
     const {openAlert} = useAlert()
     const {token} = useAuth()

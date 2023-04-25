@@ -8,19 +8,16 @@ import useCart from '../hooks/useCart';
 export default function RenderHiddenItem({item, rowClose, editQty, deleteItemCart}) {
 
     const [qty, setQty] = React.useState(item.cantidad)
-    const [total, setTotal] = React.useState(item.total)
 
     React.useEffect(()=>{
-        qty !== item.cantidad && setTotal((qty*item.precioUnitario).toFixed(2))
-    },[qty])
-
-    React.useEffect(()=>{
+        !rowClose && setQty(item.cantidad)
         if (rowClose && qty !== item.cantidad) {
+            /* console.log('entro', qty, item.cantidad) */
             editQty({
                 ...item,
                 modificado: true,
                 cantidad: qty,
-                total: total
+                total: (qty*item.precioUnitario).toFixed(2)
             })
         }
     },[rowClose])
@@ -34,7 +31,7 @@ export default function RenderHiddenItem({item, rowClose, editQty, deleteItemCar
       <View style={styles.rowBack}>
           <TouchableOpacity
               style={[styles.backRightBtn, {backgroundColor: '#FF6B6B', width: 80}]}
-              onPress={() => deleteItemCart(item)}
+              onPress={() => setQty(0)}
           >
               <DeleteIcon color={'#fff'} size={40} name='delete' />
           </TouchableOpacity>

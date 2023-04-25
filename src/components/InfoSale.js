@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Switch, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Divider } from '@rneui/base'
 import ProductCard from './ProductCard'
 
@@ -16,8 +16,42 @@ export default function InfoSale({info}) {
         return valueColor
     }
 
-    const [isEnabled, setIsEnabled] = useState(false);
+    const [isEnabled, setIsEnabled] = useState(true);
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+    const [list, setList] = useState([])
+
+    useEffect(()=>{
+        const busqueda = info?.lineaVenta.reduce((acc, item) => {
+          acc[item.idProducto] = ++acc[item.idProducto] || 0;
+          return acc;
+        }, {});
+
+        const duplicados = info?.lineaVenta.filter( (item) => {
+          return busqueda[item.idProducto];
+        });
+
+        console.log(duplicados)
+
+        isEnabled ? 
+
+        setList(info?.lineaVenta.filter((item)=>{
+            if(item.idProducto === duplicados[0]?.idProducto && item.modificado === true ){
+                return item
+            }
+            if (item.idProducto !== duplicados[0]?.idProducto && item.modificado === false ) {
+                return item
+            }
+        }))
+        :
+        setList(info?.lineaVenta.filter((item)=>{
+            if(item.idProducto === duplicados[0]?.idProducto && item.modificado === false ){
+                return item
+            }
+            if (item.idProducto !== duplicados[0]?.idProducto && item.modificado === false ) {
+                return item
+            }
+        }))
+    },[isEnabled])
 
     return (
         <View style={{padding: 15, flex: 1}}>
@@ -48,7 +82,7 @@ export default function InfoSale({info}) {
             </View>
             <View style={{flex: 1}} > 
                 <FlatList
-                    data={info.lineaVenta}
+                    data={list}
                     style={styles.list}
                     renderItem={({item})=><ProductCard {...item} cart={true} />}
                 />

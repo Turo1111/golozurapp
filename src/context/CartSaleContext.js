@@ -33,12 +33,12 @@ export function CartSaleProvider(props) {
     }
 
     const editQty = (item) => {
-        console.log("editando :",item)
-        setCart(cart.map(obj => item.idProduct === obj.idProduct ? obj = item : obj))
+        /* console.log("editando :",item) */
+        setCart(cart.map(obj => item.idProducto === obj.idProducto ? obj = item : obj))
     }
 
     const deleteItemCart = (item) => {
-        setCart(cart.filter(obj => item.idProduct !== obj.idProduct))
+        setCart(cart.filter(obj => item.idProducto !== obj.idProduct))
     }
 
     const addClientCart = (item) => {

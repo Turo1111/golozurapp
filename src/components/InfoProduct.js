@@ -4,8 +4,6 @@ import { Divider } from '@rneui/base'
 
 export default function InfoProduct({item}) {
 
-  console.log(item)
-
   return (
     <View  style={{paddingVertical: 10, paddingHorizontal: 15}}>
       <Text style={{fontSize: 20, fontFamily: 'Cairo-Regular', color: '#9E9E9E', marginVertical: 10 }}>{item.descripcion}</Text>

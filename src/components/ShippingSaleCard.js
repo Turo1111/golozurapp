@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, Pressable, FlatList } from 'react-native'
+import { StyleSheet, Text, View, ScrollView, Pressable, FlatList, TouchableHighlight } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { usePacking } from '../context/PackingSaleContext'
 import MapView from 'react-native-maps'
@@ -6,25 +6,15 @@ import ProductCard from './ProductCard'
 import { Marker } from 'react-native-maps';
 import OpenCageGeocoder from 'opencage-api-client';
 import MyBottomSheet from './MyBottomSheet'
+import { SwipeListView } from 'react-native-swipe-list-view'
+import RenderHiddenItem from './RenderHiddenItem'
 
 export default function ShippingSaleCard({length}) {
 
     const {indexPacking, saleActive, editQty, qtyMiss, qtyChange } = usePacking()
 
-    const [filterSale, setFilterSale] = React.useState(saleActive?.lineaVenta)
-    const [filterActive, setFilterActive] = React.useState('')
     const [rowClose, setRowClose] = React.useState(false)
     const [sheetProduct, setSheetProduct] = useState(false)
-
-    const onFilterActive = (item) => {
-        if(filterActive === item) setFilterActive('')
-        if(filterActive === '' || filterActive !== item) setFilterActive(item)
-    }
-
-    React.useEffect(()=>{
-        if(filterActive !== '') setFilterSale(saleActive?.lineaVenta.filter(item=> item.categoria === filterActive && item.estado !== 'entregado'))
-        if(filterActive === '') setFilterSale(saleActive?.lineaVenta.filter(item=> item.estado !== 'entregado'))
-    },[filterActive, saleActive])
 
   return (
     <View style={{flex: 1}}>
@@ -44,10 +34,31 @@ export default function ShippingSaleCard({length}) {
             <Text style={{fontSize: 18, fontFamily: 'Cairo-Bold', color: '#7F8487', marginStart: 25}}>${saleActive?.total}</Text>
         </Pressable>
         <MyBottomSheet open={sheetProduct} onClose={()=>setSheetProduct(false)} height={450} >
-              <FlatList 
-                data={saleActive?.lineaVenta}
-                renderItem={({item})=><ProductCard {...item} onClick={()=>console.log("cartsale productcard")} cart={true} />}
-              />
+          <SwipeListView
+            data={saleActive?.lineaVenta}
+            style={styles.list}
+            renderItem={
+                ({item})=>(
+                    <TouchableHighlight
+                        style={styles.rowFront}
+                        underlayColor={'#AAA'}
+                    >
+                        <ProductCard {...item} cart={true} onLongPress={()=>qtyChange(item._id)} />
+                    </TouchableHighlight>
+                )
+            }
+            renderHiddenItem={({item})=><RenderHiddenItem item={item} rowClose={rowClose} editQty={editQty} deleteItemCart={()=>console.log()} />}
+            rightOpenValue={-200}
+            leftOpenValue={78}
+            previewRowKey={'0'}
+            previewOpenValue={-40}
+            previewOpenDelay={3000}
+            onRowOpen={()=>setRowClose(false)}
+            onRowClose={()=>setRowClose(true)}
+            ListEmptyComponent={
+             <Text style={{textAlign: 'center', marginTop: 15, fontSize: 25, fontWeight: 'bold', color: '#c9c9c9'}} >No hay productos</Text>
+             }
+          />
         </MyBottomSheet>
     </View>
   )

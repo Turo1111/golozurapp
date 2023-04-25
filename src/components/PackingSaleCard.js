@@ -20,7 +20,6 @@ export default function PackingSaleCard({length}) {
     }
 
     React.useEffect(()=>{
-        console.log(saleActive.lineaVenta[0].categoria)
         if(filterActive !== '') setFilterSale(saleActive?.lineaVenta.filter(item=> item.categoria.toLowerCase() === filterActive && item.estado !== 'entregado'))
         if(filterActive === '') setFilterSale(saleActive?.lineaVenta.filter(item=> item.estado !== 'entregado'))
     },[filterActive, saleActive])
@@ -65,7 +64,7 @@ export default function PackingSaleCard({length}) {
                   </TouchableHighlight>
               )
           }
-          renderHiddenItem={({item})=><RenderHiddenItem item={item} rowClose={rowClose} editQty={editQty} deleteItemCart={(item)=>deleteItemCart(item)} />}
+          renderHiddenItem={({item})=><RenderHiddenItem item={item} rowClose={rowClose} editQty={editQty} deleteItemCart={deleteItemCart} />}
           rightOpenValue={-200}
           leftOpenValue={78}
           previewRowKey={'0'}
@@ -77,8 +76,8 @@ export default function PackingSaleCard({length}) {
            <Text style={{textAlign: 'center', marginTop: 15, fontSize: 25, fontWeight: 'bold', color: '#c9c9c9'}} >No hay productos</Text>
            }
         />
-        <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#9E9E9E', marginEnd: 15, textAlign: 'right' }}>{qtyMiss.length} agregado de {saleActive?.lineaVenta.filter(item=>item.estado !== "entregado").length}</Text>
-        <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#9E9E9E', marginEnd: 15, textAlign: 'right' }}>Total: ${saleActive?.total}</Text>
+        <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', color: '#9E9E9E', marginEnd: 15, textAlign: 'right' }}>{qtyMiss.length} agregado de {saleActive?.lineaVenta.filter(item=>item.estado !== "entregado").length}</Text>
+        <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', color: '#9E9E9E', marginEnd: 15, textAlign: 'right' }}>Total: ${saleActive?.total}</Text>
     </View>
   ) 
 }

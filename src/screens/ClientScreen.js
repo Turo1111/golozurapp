@@ -15,11 +15,10 @@ import InfoClient from '../components/InfoClient'
 import EditClient from '../components/EditClient'
 import Loading from '../components/Loading'
 import { useAuth } from '../context/AuthContext'
+import useLocalStorage from '../hooks/useLocalStorage'
 const axios = require('axios').default;
 
 const io = require('socket.io-client')
-
-
 
 export default function ClientScreen() {
 
@@ -43,22 +42,33 @@ export default function ClientScreen() {
   const listClient = useSearch(search.value, tag, data)
 
   const {token} = useAuth()
+  const { data: clienteLS } = useLocalStorage('cliente');
 
   useEffect(()=>{
+    const socket = io('https://gzapi.onrender.com')
     setLoading(true)
-    axios.get(`https://gzapi.onrender.com/cliente`,{
-      headers: {
-        Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
-      }
-    })
-    .then(function(response){
+    socket.on('connect', () => {
+      axios.get(`https://gzapi.onrender.com/cliente`,{
+        headers: {
+          Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+        }
+      })
+      .then(function(response){
+        setLoading(false)
+        setData(response.data.body)
+      })
+      .catch(function(error){
+          console.log("get ",error);
+      })
+    });
+    
+    socket.on('disconnect', () => {
+      console.log("desconectado")
+      setData(clienteLS)
       setLoading(false)
-      setData(response.data.body)
-    })
-    .catch(function(error){
-        console.log("get ",error);
-    })
-  },[newClient])
+    });
+    
+  },[])
 
   useEffect(()=>{
     const socket = io('https://gzapi.onrender.com')

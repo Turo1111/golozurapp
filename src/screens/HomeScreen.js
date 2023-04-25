@@ -1,16 +1,64 @@
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, Dimensions, Pressable, FlatList, Modal } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
-import React from 'react'
+import React, { useEffect } from 'react'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FeatherIcons from 'react-native-vector-icons/Feather'
 import IonIcons from 'react-native-vector-icons/Ionicons'
 import { ScrollView } from 'react-native-gesture-handler';
 import { Divider } from '@rneui/base';
 import { useAuth } from '../context/AuthContext';
+import { useAlert } from '../context/AlertContext'
+import axios from 'axios'
+import useLocalStorage from '../hooks/useLocalStorage'
+const io = require('socket.io-client')
 
 export default function HomeScreen({navigation}) {
 
-  const {user} = useAuth()
+  const {user, token} = useAuth()
+  const {openAlert} = useAlert()
+  const { saveData: saveProducto } = useLocalStorage('producto');
+  const { saveData: saveCliente } = useLocalStorage('cliente');
+
+  useEffect(()=>{
+    const socket = io('https://gzapi.onrender.com')
+    socket.on('connect', () => {
+      console.log('Connected to server');
+      openAlert("CONECTADO", '#B6E2A1')
+    });
+    
+    socket.on('disconnect', () => {
+      console.log('Disconnected from server');
+      openAlert("DESCONECTADO", '#F7A4A4')
+    });
+    return () => {
+      socket.disconnect();
+    };
+  },[])
+
+  useEffect(()=>{
+    axios.get(`https://gzapi.onrender.com/cliente`,{
+      headers: {
+        Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+      }
+    })
+    .then(function(response){
+      saveProducto(response.data.body)
+    })
+    .catch(function(error){
+        console.log("get ",error);
+    })
+    axios.get(`https://gzapi.onrender.com/producto`,{
+      headers: {
+        Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+      }
+    })
+    .then(function(response){
+      saveCliente(response.data.body)
+    })
+    .catch(function(error){
+        console.log("get ",error);
+    })
+  },[])
 
   return (
     <SafeAreaView style={styles.content}>
