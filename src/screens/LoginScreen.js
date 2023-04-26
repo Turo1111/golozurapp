@@ -22,7 +22,7 @@ export default function LoginScreen({navigation}) {
         validateOnChange: false,
         onSubmit: (formValue) => {
            setLoading(true)
-            axios.post(`https://gzapi.onrender.com/user/login`, {...formValue, usuario: (formValue.usuario).toLowerCase()})
+            axios.post(`https://gzapi.onrender.com/user/login`, formValue)
             .then(function(response){
                 addUser(response.data.data)
                 addToken(response.data.token)
