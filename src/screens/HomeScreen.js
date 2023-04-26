@@ -1,6 +1,6 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, Dimensions, Pressable, FlatList, Modal } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, TextInput, Dimensions, Pressable, FlatList, Modal } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import FeatherIcons from 'react-native-vector-icons/Feather'
 import IonIcons from 'react-native-vector-icons/Ionicons'
@@ -8,26 +8,71 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { Divider } from '@rneui/base';
 import { useAuth } from '../context/AuthContext';
 import { useAlert } from '../context/AlertContext'
-import axios from 'axios'
+import axios from 'axios'/* 
+import useLocalStorage from '../hooks/useLocalStorage' */
+import { useAsyncStorage } from '../context/AsyncStorageContext '
 import useLocalStorage from '../hooks/useLocalStorage'
+import Button from '../components/Button'
 const io = require('socket.io-client')
+const socket = io('https://gzapi.onrender.com')
 
 export default function HomeScreen({navigation}) {
 
   const {user, token} = useAuth()
   const {openAlert} = useAlert()
-  const { saveData: saveProducto } = useLocalStorage('producto');
-  const { saveData: saveCliente } = useLocalStorage('cliente');
+  const { saveData: saveProducto } = useLocalStorage([],'producto');
+  const { saveData: saveCliente } = useLocalStorage([],'cliente');
+  const { data, clearData } = useAsyncStorage();
+  const [online, setOnline] = useState(true)
 
+  const handleSubmitSale = () => {
+    console.log(data)
+    data.map((venta)=>{
+      axios.post(`https://gzapi.onrender.com/venta`, venta.sale,
+        {
+          headers: {
+            Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+          }
+        })
+        .then(function(response){
+          venta.cart.map(item=>{
+            axios.post(`https://gzapi.onrender.com/lineaVenta`, 
+                {
+                    ...item,
+                    idVenta: response.data.body._id
+                },
+                {
+                    headers: {
+                      Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
+                    }
+                }
+            )
+            .then(function(r){
+                socket.emit('venta', {...response.data.body, cliente: venta.cliente});
+                clearData()
+                
+            })
+            .catch(function(error){
+                console.log("post",error);
+            })
+          })
+          openAlert("VENTA CREADA EXITOSAMENTE!", '#B6E2A1')
+        })
+        .catch(function(error){
+            console.log("post",error);
+        })
+    })
+  }
+  
   useEffect(()=>{
     const socket = io('https://gzapi.onrender.com')
     socket.on('connect', () => {
-      console.log('Connected to server');
+      setOnline(true)
       openAlert("CONECTADO", '#B6E2A1')
     });
     
     socket.on('disconnect', () => {
-      console.log('Disconnected from server');
+      setOnline(false)
       openAlert("DESCONECTADO", '#F7A4A4')
     });
     return () => {
@@ -42,7 +87,7 @@ export default function HomeScreen({navigation}) {
       }
     })
     .then(function(response){
-      saveProducto(response.data.body)
+      saveCliente(response.data.body)
     })
     .catch(function(error){
         console.log("get ",error);
@@ -53,7 +98,8 @@ export default function HomeScreen({navigation}) {
       }
     })
     .then(function(response){
-      saveCliente(response.data.body)
+      console.log(response.data.body.length)
+      saveProducto(response.data.body)
     })
     .catch(function(error){
         console.log("get ",error);
@@ -93,13 +139,24 @@ export default function HomeScreen({navigation}) {
             <Text style={{fontSize: 14, fontFamily: 'Cairo-Regular', color: '#9E9E9E', textAlign: 'center' }}>Clientes</Text>
           </Pressable>
         </ScrollView>
+        <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 10, borderColor: '#d9d9d9', borderWidth: 1, margin: 5}} >
+          <Text style={{fontSize: 18, fontFamily: 'Cairo-Bold', color: '#7F8487' }} >Estado del servidor : {online ? 'online':'offline'}</Text>
+        </View>
+        {
+          data && 
+          <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 10, borderColor: '#d9d9d9', borderWidth: 1, margin: 5, flexDirection: 'row', justifyContent: 'space-around', alignItems: 'center'}} >
+            <Text style={{fontSize: 18, fontFamily: 'Cairo-Bold', color: '#7F8487' }} >Ventas sin guardar : {data?.length || 0}</Text>
+            <Button text={'Enviar'} fontSize={16} width={'30%'} onPress={handleSubmitSale} />
+          </View>
+        }
+      
        <View style={{paddingVertical: 5, paddingHorizontal: 10, borderRadius: 10, borderColor: '#d9d9d9', borderWidth: 1, margin: 15}} >
           <Text style={{fontSize: 18, fontFamily: 'Cairo-Bold', color: '#7F8487' }} >Ventas mes : Enero</Text> 
           <Divider style={{marginVertical: 5, paddingHorizontal: 35}} />
           <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
             <View style={{marginStart: 10}}>
-              <Text style={{color: '#FF6D28', fontSize: 16, fontFamily: 'Cairo-Bold' }}>pendiente</Text>
-              <Text style={{color: '#FF6D28', fontSize: 14, fontFamily: 'Cairo-Regular'}}>213</Text>
+              <Text style={{color: '#FF6D28', fontSize: 16, fontFamily: 'Cairo-Bold' }}>ventas</Text>
+              <Text style={{color: '#FF6D28', fontSize: 14, fontFamily: 'Cairo-Regular'}}>{data?.length || 0}</Text>
             </View>
             <View style={{marginStart: 10}}>
               <Text style={{color: '#EEBB4D', fontSize: 16, fontFamily: 'Cairo-Bold' }}>armado</Text>

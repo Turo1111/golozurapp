@@ -1,15 +1,21 @@
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useEffect, useState } from 'react';
 
-const useLocalStorage = (initialValue, key) => {
-  const [data, setData] = useState(initialValue);
+const AsyncStorageContext = createContext();
+
+export const useAsyncStorage = () => {
+  return useContext(AsyncStorageContext);
+};
+
+export const AsyncStorageProvider = ({ children }) => {
+  const [data, setData] = useState(null);
 
   const saveData = async (value) => {
     try {
       const jsonValue = JSON.stringify(value);
-      await AsyncStorage.setItem(key, jsonValue);
-      setData(value);
+      await AsyncStorage.setItem('venta', jsonValue);
       console.log('Data saved successfully');
+      setData(value);
     } catch (e) {
       console.log('Failed to save data');
     }
@@ -17,21 +23,23 @@ const useLocalStorage = (initialValue, key) => {
 
   const getData = async () => {
     try {
-      const jsonValue = await AsyncStorage.getItem(key);
+      const jsonValue = await AsyncStorage.getItem('venta');
       if (jsonValue !== null) {
         const value = JSON.parse(jsonValue);
-        setData(value);
         console.log('Data retrieved successfully');
+        setData(value);
+        return value
       }
     } catch (e) {
       console.log('Failed to retrieve data');
+      return []
     }
   };
 
   const clearData = async () => {
     try {
-      await AsyncStorage.removeItem(key);
-      setData(initialValue);
+      await AsyncStorage.removeItem('venta');
+      setData(undefined);
       console.log('Data cleared successfully');
     } catch (e) {
       console.log('Failed to clear data');
@@ -42,7 +50,9 @@ const useLocalStorage = (initialValue, key) => {
     getData();
   }, []);
 
-  return { data, saveData, clearData, getData };
+  return (
+    <AsyncStorageContext.Provider value={{ data, saveData, clearData }}>
+      {children}
+    </AsyncStorageContext.Provider>
+  );
 };
-
-export default useLocalStorage;

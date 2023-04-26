@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import Button from './Button'
 import useCart from '../hooks/useCart'
+import { useNavigation } from '@react-navigation/native'
 
 export default function SliderSale({itemSlide=[1,2,3], onCloseSheet}) {
 

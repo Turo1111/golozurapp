@@ -34,6 +34,7 @@ export default function ClientScreen() {
   const [openEdit, setOpenEdit] = useState(false)
   const [loading, setLoading] = useState(false)
   const {openAlert} = useAlert()
+  const {data: clienteLocalStorage} = useLocalStorage([],'cliente')
 
   const search = useInputValue('','')
 
@@ -43,25 +44,24 @@ export default function ClientScreen() {
 
   const {token} = useAuth()
 
-  const {data: clienteLocalStorage} = useLocalStorage('cliente')
-
   useEffect(()=>{
     setLoading(true)
-    axios.get(`https://gzapi.onrender.com/cliente`,{
+    axios.get(`https://gzapi.onrender.com/cliente`,
+    {
       headers: {
         Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
       }
     })
     .then(function(response){
-      setLoading(false)
       setData(response.data.body)
     })
     .catch(function(error){
-        console.log("get ",error, clienteLocalStorage);
-        setLoading(false)
         setData(clienteLocalStorage)
+        console.log("get ",error);
     })
-  },[newClient])
+    .finally(()=>setLoading(false))
+  },[clienteLocalStorage, token])
+
 
   useEffect(()=>{
     const socket = io('https://gzapi.onrender.com')
@@ -101,7 +101,7 @@ export default function ClientScreen() {
           data={listClient}
           renderItem={({item})=><ClientCard item={item} onPress={()=>setInfoClient(item)} />}
           ListEmptyComponent={
-            <Text style={{textAlign: 'center', marginTop: 15, fontSize: 25, fontWeight: 'bold', color: '#c9c9c9'}} >No hay productos</Text>
+            <Text style={{textAlign: 'center', marginTop: 15, fontSize: 25, fontWeight: 'bold', color: '#c9c9c9'}} >No hay clientes</Text>
           }
           renderHiddenItem={
             (data, rowMap) => (

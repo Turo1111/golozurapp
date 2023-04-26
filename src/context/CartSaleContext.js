@@ -1,9 +1,10 @@
-import { useNavigation } from '@react-navigation/native'
 import React, { useState, createContext, useEffect } from 'react'
 import { useDate } from '../hooks/useDate'
 import { useAlert } from './AlertContext';
 import { useLoading } from './LoadingContext';
 import { useAuth } from './AuthContext';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { useAsyncStorage } from './AsyncStorageContext ';
 const axios = require('axios').default;
 const io = require('socket.io-client')
 
@@ -22,6 +23,8 @@ export function CartSaleProvider(props) {
     const {openAlert} = useAlert()
     const {setOpen} = useLoading()
     const {token} = useAuth()
+    /* const { data: ventaLocalStorage, saveData: saveVenta } = useLocalStorage([],'venta'); */
+    const {data: ventaLocalStorage, saveData: saveVenta} = useAsyncStorage()
 
     const {date} = useDate()
 
@@ -46,7 +49,7 @@ export function CartSaleProvider(props) {
     }
 
     const finishSale = (onCloseSheet) => {
-
+        
         if(client !== undefined || cart.length !== 0){
             const sale = {
                 estado: 'pendiente',
@@ -76,7 +79,7 @@ export function CartSaleProvider(props) {
                             headers: {
                               Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"
                             }
-                          }
+                        }
                     )
                     .then(function(r){
                         socket.emit('venta', {...response.data.body, cliente: client});
@@ -91,6 +94,8 @@ export function CartSaleProvider(props) {
             })
             .catch(function(error){
                 console.log("post",error);
+                setOpen(false)
+                ventaLocalStorage ? saveVenta([...ventaLocalStorage,{sale, cart, cliente: client}]) : saveVenta([{sale, cart}])
             })
     
             setCart([]),
@@ -126,7 +131,8 @@ export function CartSaleProvider(props) {
         deleteItemCart,
         addClientCart,
         client,
-        finishSale
+        finishSale,
+        ventaLocalStorage
     }
 
     return <CartSaleContext.Provider value={valueContext}>{children}</CartSaleContext.Provider>

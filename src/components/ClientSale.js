@@ -7,6 +7,7 @@ import { useInputValue } from '../hooks/useInputValue'
 import axios from 'axios'
 import Loading from './Loading'
 import { useAuth } from '../context/AuthContext'
+import useLocalStorage from '../hooks/useLocalStorage'
 
 export const ClientCard = ({item, onPress}) =>{
 
@@ -35,6 +36,7 @@ const ClientSale = ({}) => {
   const [data, setData] = React.useState([])
   const [loading, setLoading] = React.useState(false)
   const {token} = useAuth()
+  const {data: clienteLocalStorage} = useLocalStorage([],'cliente')
 
   const listClient = useSearch(search.value, ["nombre", "apellido"], data)
 
@@ -46,13 +48,14 @@ const ClientSale = ({}) => {
       }
     })
     .then(function(response){
-      setLoading(false)
       setData(response.data.body)
     })
     .catch(function(error){
         console.log("get ",error);
+        setData(clienteLocalStorage)
     })
-  },[])
+    .finally(()=>setLoading(false))
+  },[clienteLocalStorage, token])
 
   if (loading) {
     return <Loading text='Cargando clientes'/>

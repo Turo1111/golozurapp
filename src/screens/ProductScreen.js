@@ -16,6 +16,7 @@ import EditProduct from '../components/EditProduct'
 import axios from 'axios'
 import Loading from '../components/Loading'
 import { useAuth } from '../context/AuthContext'
+import useLocalStorage from '../hooks/useLocalStorage'
 
 const io = require('socket.io-client')
 
@@ -34,6 +35,7 @@ export default function ProductScreen() {
   const [infoProduct, setInfoProduct] = useState(undefined)
   const [loading, setLoading] = useState(false)
   const {token} = useAuth()
+  const {data: productoLocalStorage} = useLocalStorage([],'producto')
 
   const search = useInputValue('','')
 
@@ -50,13 +52,14 @@ export default function ProductScreen() {
       }
     })
     .then(function(response){
-      setLoading(false)
       setData(response.data.body)
     })
     .catch(function(error){
+      setData(productoLocalStorage)
         console.log("get ",error);
     })
-  },[newProduct])
+    .finally(()=>setLoading(false))
+  },[productoLocalStorage, token])
 
   useEffect(()=>{
     const socket = io('https://gzapi.onrender.com')

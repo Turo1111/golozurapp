@@ -13,6 +13,7 @@ import { useSearch } from '../hooks/useSearch';
 import MyBottomSheet from '../components/MyBottomSheet';
 import Loading from '../components/Loading';
 import { useAuth } from '../context/AuthContext';
+import useLocalStorage from '../hooks/useLocalStorage';
 const axios = require('axios').default;
 
 
@@ -24,6 +25,7 @@ export default function NewSaleScreen() {
   const [openBS, setOpenBS] = useState(false)
   const [loading, setLoading] = useState(false)
   const {token} = useAuth()
+  const {data: productoLocalStorage} = useLocalStorage([],'producto')
 
   const search = useInputValue('','')
 
@@ -42,13 +44,14 @@ export default function NewSaleScreen() {
       }
     })
     .then(function(response){
-      setLoading(false)
       setProducts(response.data.body)
     })
     .catch(function(error){
         console.log("get ",error);
+        setProducts(productoLocalStorage)
     })
-  },[])
+    .finally(()=>setLoading(false))
+  },[productoLocalStorage, token])
 
   const addProductCart = (item) => {
     setOpenModal(true)

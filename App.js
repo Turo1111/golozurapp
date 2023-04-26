@@ -11,6 +11,7 @@ import { AlertProvider } from './src/context/AlertContext';
 import ModalLoading from './src/components/ModalLoading';
 import { LoadingProvider } from './src/context/LoadingContext';
 import { AuthProvider } from './src/context/AuthContext';
+import { AsyncStorageProvider } from './src/context/AsyncStorageContext ';
 
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
@@ -29,14 +30,16 @@ export default function App() {
       <LoadingProvider>
         <AlertProvider>
           <AuthProvider>
-            <CartSaleProvider>
-              <PackingSaleProvider>
-                  <NavigationStack>
-                  </NavigationStack>
-                  <Alert/>
-                  <ModalLoading/>
-              </PackingSaleProvider>
-            </CartSaleProvider>
+            <AsyncStorageProvider>
+              <CartSaleProvider>
+                <PackingSaleProvider>
+                    <NavigationStack>
+                    </NavigationStack>
+                    <Alert/>
+                    <ModalLoading/>
+                </PackingSaleProvider>
+              </CartSaleProvider>
+            </AsyncStorageProvider>
           </AuthProvider>
         </AlertProvider>
       </LoadingProvider>
