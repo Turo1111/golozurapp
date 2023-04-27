@@ -26,7 +26,7 @@ export default function HomeScreen({navigation}) {
   const [online, setOnline] = useState(true)
 
   const handleSubmitSale = () => {
-    console.log(data)
+    clearData()
     data.map((venta)=>{
       axios.post(`https://gzapi.onrender.com/venta`, venta.sale,
         {
@@ -53,13 +53,13 @@ export default function HomeScreen({navigation}) {
                 
             })
             .catch(function(error){
-                console.log("post",error);
+                console.log("post aca",error);
             })
           })
           openAlert("VENTA CREADA EXITOSAMENTE!", '#B6E2A1')
         })
         .catch(function(error){
-            console.log("post",error);
+            console.log("post ha",error);
         })
     })
   }
@@ -98,7 +98,6 @@ export default function HomeScreen({navigation}) {
       }
     })
     .then(function(response){
-      console.log(response.data.body.length)
       saveProducto(response.data.body)
     })
     .catch(function(error){

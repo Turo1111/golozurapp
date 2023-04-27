@@ -19,11 +19,14 @@ export default function SliderSale({itemSlide=[1,2,3], onCloseSheet}) {
     }
 
   return (
-    <View style={{height: '100%', width: '100%', paddingHorizontal: 15, paddingBottom: 25}} >
+    <View style={{paddingHorizontal: 15, paddingBottom: 10, flex: 1}} >
+        <View style={{flex: 1, paddingBottom: 15}} >
             {
-                itemSlide.map((item,index) => index === indexActive && <View style={{height: '91%', marginVertical: 0}} key={index}>{item}</View>)
+                itemSlide.map((item,index) => index === indexActive && <View style={{flex: 1}}  key={index}>{item}</View>)
             }
-        <View style={{flex: 1, justifyContent: 'flex-end'}} >
+        </View>
+        {/*      */}
+        <View >
             <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
                 <Button text={'Volver'} onPress={()=>downSlide()} backgroundColor={indexActive===0 && '#d9d9d9'}  />
                 {

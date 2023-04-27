@@ -66,7 +66,7 @@ export default function ListSale({height='50%', renderItem, renderHiddenItem, ri
             previewOpenValue={-40}
             previewOpenDelay={3000}
         />
-        <MyBottomSheet open={openBS} onClose={()=>setOpenBS(false)} height={680} >
+        <MyBottomSheet open={openBS} onClose={()=>setOpenBS(false)} fullScreen={true} >
             <InfoSale info={saleInfo} />
         </MyBottomSheet>
     </View>

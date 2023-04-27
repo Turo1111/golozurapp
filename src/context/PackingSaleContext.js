@@ -23,6 +23,7 @@ export function PackingSaleProvider(props) {
     const {openAlert} = useAlert()
     const  {setOpen} = useLoading()
     const {token} = useAuth()
+    const {date} = useDate()
 
     //para agregar o quitar ventas a la lista seleccionada
 
@@ -127,7 +128,7 @@ export function PackingSaleProvider(props) {
                         })
                     )
                 }
-                axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "entregado", total: item.total},
+                axios.patch(`https://gzapi.onrender.com/venta/${item._id}`, {estado: "entregado", total: item.total, fechaEntrega: date },
                 {
                     headers: {
                       Authorization: `Bearer ${token}` // Agregar el token en el encabezado como "Bearer {token}"

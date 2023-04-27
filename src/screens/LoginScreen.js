@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View, TextInput } from 'react-native'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import { useFormik } from 'formik'
 import Button from '../components/Button'
 import { useAlert } from '../context/AlertContext';
 import { useFonts } from 'expo-font';
 import Loading from '../components/Loading';
 import { useAuth } from '../context/AuthContext';
+import useLocalStorage from '../hooks/useLocalStorage';
 const axios = require('axios').default;
 
 export default function LoginScreen({navigation}) {
@@ -13,6 +14,15 @@ export default function LoginScreen({navigation}) {
     const {openAlert} = useAlert()
     const [loading, setLoading] = useState(false)
     const {addUser, addToken} = useAuth()
+    const { saveData: saveUser, data: userLocalStorage } = useLocalStorage([],'user');
+
+    useEffect(()=>{
+        if (userLocalStorage) {
+            addUser(userLocalStorage.user)
+            addToken(userLocalStorage.token)
+            navigation.navigate('NavigationDrawer')
+        }
+    },[])
 
     const formik = useFormik({
         initialValues: {
@@ -26,6 +36,10 @@ export default function LoginScreen({navigation}) {
             .then(function(response){
                 addUser(response.data.data)
                 addToken(response.data.token)
+                saveUser({
+                    user: response.data.data,
+                    token: response.data.token
+                })
                 setLoading(false)
                 navigation.navigate('NavigationDrawer')
                 openAlert("LOGEADO CORRECTAMENTE CHE!", '#B6E2A1')
@@ -39,8 +53,6 @@ export default function LoginScreen({navigation}) {
             openAlert("LOGEADO CORRECTAMENTE CHE!", '#B6E2A1') */
         }
     })
-
-    
 
     if (loading) {
         return <Loading/>

@@ -9,9 +9,7 @@ const useLocalStorage = (initialValue, key) => {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem(key, jsonValue);
       setData(value);
-      console.log('Data saved successfully');
     } catch (e) {
-      console.log('Failed to save data');
     }
   };
 
@@ -21,10 +19,8 @@ const useLocalStorage = (initialValue, key) => {
       if (jsonValue !== null) {
         const value = JSON.parse(jsonValue);
         setData(value);
-        console.log('Data retrieved successfully');
       }
     } catch (e) {
-      console.log('Failed to retrieve data');
     }
   };
 
@@ -32,9 +28,7 @@ const useLocalStorage = (initialValue, key) => {
     try {
       await AsyncStorage.removeItem(key);
       setData(initialValue);
-      console.log('Data cleared successfully');
     } catch (e) {
-      console.log('Failed to clear data');
     }
   };
 

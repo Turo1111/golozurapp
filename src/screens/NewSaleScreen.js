@@ -92,7 +92,7 @@ return (
         }
     />
     <ResumeBottomSheet onPress={() => setOpenBS(true)} />
-    <MyBottomSheet open={openBS} onClose={()=>setOpenBS(false)} height={0} >
+    <MyBottomSheet open={openBS} onClose={()=>setOpenBS(false)} fullScreen={true} >
       <SliderSale itemSlide={[<CartSale/>, <ClientSale />, <ResumeSale/>]} onCloseSheet={()=>setOpenBS(false)} />
     </MyBottomSheet>
     {

@@ -18,16 +18,15 @@ export default function ItemSale({item, onPress}) {
   const {listSelected, addDeleteSale} = usePacking()
 
   const isSelected = listSelected.find(obj => obj._id === item?._id)
-
   
   return (
     <Pressable style={{borderBottomColor: '#d1d1d1', borderBottomWidth: 1, paddingVertical: 10, backgroundColor: isSelected && 'rgba(35,102,203,0.5)' }} onPress={()=>addDeleteSale(item)} >
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
         <Text style={{fontSize: 18, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.cliente?.apellido}, {item?.cliente?.nombre}</Text>
-        <Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: '#7F8487'}}>{item?.fechaPre}</Text>
+        <Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: '#7F8487'}}>{item?.fechaPre.substring(0, 10)}</Text>
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-        <Text style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487'}}>{item?.cliente?.direccion[0]?.calle} {item?.cliente?.direccion[0]?.numero} , {item?.cliente?.direccion[0]?.ciudad}</Text>
+        <Text numberOfLines={1} ellipsizeMode='tail' style={{fontSize: 16, fontFamily: 'Cairo-Regular', color: '#7F8487', width: '60%'}}>{item?.cliente?.direccion[0]?.calle} {item?.cliente?.direccion[0]?.numero} , {item?.cliente?.direccion[0]?.ciudad}</Text>
         <Text style={{fontSize: 16, fontFamily: 'Cairo-Bold', color: color()}}>{item?.estado}</Text>
       </View>
       <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>

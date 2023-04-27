@@ -85,11 +85,10 @@ const MyMap = ({ address }) => {
 
 const styles = StyleSheet.create({
   title: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '600',
     fontFamily: 'Cairo-Regular',
-    color: '#7F8487',
-    marginVertical: 10
+    color: '#7F8487'
   },
   mapContainer: {
     width: '100%',

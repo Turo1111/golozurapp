@@ -43,11 +43,10 @@ export default function CartSale() {
 
 const styles = StyleSheet.create({
     title: {
-        fontSize: 18,
+        fontSize: 20,
         fontWeight: '600',
         fontFamily: 'Cairo-Regular',
         color: '#7F8487',
-        marginVertical: 10
     },
     total: {
         paddingTop: 10,
@@ -64,7 +63,6 @@ const styles = StyleSheet.create({
       borderWidth: 1,
       borderColor: '#D9D9D9',
       borderRadius: 15,
-      marginVertical: 15,
       flex: 1
     },
 })

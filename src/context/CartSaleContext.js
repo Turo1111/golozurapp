@@ -22,11 +22,10 @@ export function CartSaleProvider(props) {
     const [client, setClient] = useState(undefined)
     const {openAlert} = useAlert()
     const {setOpen} = useLoading()
-    const {token} = useAuth()
+    const {token, user} = useAuth()
+    const {date} = useDate()
     /* const { data: ventaLocalStorage, saveData: saveVenta } = useLocalStorage([],'venta'); */
     const {data: ventaLocalStorage, saveData: saveVenta} = useAsyncStorage()
-
-    const {date} = useDate()
 
     const addItemCart = (item) => {
         if(item) {
@@ -53,13 +52,13 @@ export function CartSaleProvider(props) {
         if(client !== undefined || cart.length !== 0){
             const sale = {
                 estado: 'pendiente',
-                usuario: '63a9e9872423fabea1e4293b',
+                usuario: user._id,
                 cliente: client?._id,
                 fechaPre: date,
-                fechaEntrega: '',
                 descuento: '0',
                 total: totalCart
             }
+            console.log(sale)
             onCloseSheet()
             setOpen(true)
             axios.post(`https://gzapi.onrender.com/venta`, sale,
@@ -86,14 +85,14 @@ export function CartSaleProvider(props) {
                         setOpen(false)
                     })
                     .catch(function(error){
-                        console.log("post",error);
+                        console.log("post linea venta",error);
                     })
                 })
 
                 openAlert("VENTA CREADA EXITOSAMENTE!", '#B6E2A1')
             })
             .catch(function(error){
-                console.log("post",error);
+                console.log("post venta",error);
                 setOpen(false)
                 ventaLocalStorage ? saveVenta([...ventaLocalStorage,{sale, cart, cliente: client}]) : saveVenta([{sale, cart}])
             })

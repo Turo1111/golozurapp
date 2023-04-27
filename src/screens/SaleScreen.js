@@ -56,6 +56,7 @@ export default function SaleScreen() {
     useEffect(()=>{
       const socket = io('https://gzapi.onrender.com')
       socket.on('venta', (venta) => {
+        console.log(venta)
         setFilterSale((prevData)=>{
           const exist = prevData.find(elem => elem._id === venta._id )
           if (exist) {
