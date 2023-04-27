@@ -1,4 +1,3 @@
-import { useState } from "react"
 
 export const useSearch = (search, tags, list) => {
 
@@ -14,7 +13,6 @@ export const useSearch = (search, tags, list) => {
                 item[key][i]?.toString().toLowerCase().indexOf(search.toLowerCase()) !== -1 && result.push(item)
               })
             } else{
-              /* console.log(item[tag]?.toString().toLowerCase().indexOf(search.toLowerCase())) */
               item[tag]?.toString().toLowerCase().indexOf(search.toLowerCase()) !== -1 && result.push(item)
             }
           })
@@ -41,12 +39,3 @@ export const useSearch = (search, tags, list) => {
     }
 
 }
-
-/* return (
-            list.filter(item => {
-                const equalTag = tag.find(i => i.id === item.id)
-                return (
-                    equalTag.tag.toLowerCase().indexOf(search.toLowerCase()) !== -1
-                )
-            })
-          ) */

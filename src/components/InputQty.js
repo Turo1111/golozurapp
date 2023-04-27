@@ -1,6 +1,5 @@
-import { StyleSheet, Text, View, Pressable, TextInput } from 'react-native'
+import { StyleSheet, Text, View, Pressable } from 'react-native'
 import React from 'react'
-import Search from './Search'
 
 export default function InputQty({qty, upQty, downQty, x5, x10, reset, cart}) {
   return (

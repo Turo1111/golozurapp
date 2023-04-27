@@ -235,9 +235,6 @@ const ModalSearch = ({open, onClose, title, enlace, onChangeText}) => {
         socket.on('categoria', (categoria) => {
             setData((prevData)=>[...prevData, categoria])
         })
-        /* return () => {
-          socket.off('categoria', ()=>console.log('off'))
-        } */
       }, [])
 
 

@@ -1,6 +1,5 @@
-import { StyleSheet, Text, View, Modal } from 'react-native'
-import React,{useState} from 'react'
-import { useAlert } from '../context/AlertContext'
+import { Modal } from 'react-native'
+import React from 'react'
 import Loading from './Loading'
 import { useLoading } from '../context/LoadingContext'
 
@@ -18,6 +17,3 @@ export default function ModalLoading() {
     </Modal>
   )
 }
-
-const styles = StyleSheet.create({
-})

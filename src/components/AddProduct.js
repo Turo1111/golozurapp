@@ -4,7 +4,6 @@ import Button from './Button'
 import { CheckBox } from '@rneui/themed';
 import InputQty from './InputQty';
 import useCart from '../hooks/useCart';
-import Alert from './Alert';
 
 export default function AddProduct({openModal, onClose, item}) {
 

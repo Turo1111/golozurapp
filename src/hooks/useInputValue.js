@@ -13,11 +13,9 @@ export const useInputValue = (initialValue, onlyType) => {
 
     if (onlyType === 'number') {
       !isNaN(e.target.value)  && setvalue(e.target.value)
-      console.log("solo acepta numeros");
     }
     if (onlyType === 'string'){
       esLetra(e.target.value) && setvalue(e.target.value)
-      console.log("solo acepta letras");
     }
     if(onlyType === ''){
       setvalue(e)

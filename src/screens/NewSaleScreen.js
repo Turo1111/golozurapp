@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FlatList, StyleSheet, Text, View, SafeAreaView } from 'react-native'
 import ProductCard from '../components/ProductCard';
 import CartSale from '../components/CartSale';
@@ -29,9 +29,7 @@ export default function NewSaleScreen() {
 
   const search = useInputValue('','')
 
-  const tag = ["descripcion", "codigoBarra", "marca", "categoria"]/* 
-
-  console.log(products.filter((item)=>item.categoria === "Galletas")) */
+  const tag = ["descripcion", "codigoBarra", "marca", "categoria"]
 
   const listProduct = useSearch(search.value, tag, products)
 

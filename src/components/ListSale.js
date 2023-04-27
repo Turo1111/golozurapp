@@ -10,9 +10,8 @@ import MyBottomSheet from './MyBottomSheet';
 import { useAuth } from '../context/AuthContext';
 
 
-export default function ListSale({height='50%', renderItem, renderHiddenItem, rightOpenValue, listSale}) {
+export default function ListSale({height='50%', listSale}) {
 
-    const bottomSheet = useRef();
     const [saleInfo, setSaleInfo] = useState(undefined)
     const [openBS, setOpenBS] = useState(false)
     const {token} = useAuth()

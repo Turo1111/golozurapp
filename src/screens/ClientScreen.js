@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import React, {useEffect, useRef, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import Search from '../components/Search'
 import Button from '../components/Button'
 import { useAlert } from '../context/AlertContext'
@@ -22,12 +22,7 @@ const io = require('socket.io-client')
 
 export default function ClientScreen() {
 
-  const [open, setOpen] = React.useState(false)
-
-  const bottomSheet = useRef();
-
   const [data, setData] = useState([])
-  const [newClient, setNewClient] = useState(false)
   const [openBS, setOpenBS] = useState(false)
   const [infoClient, setInfoClient] = useState(undefined)
   const [openInfo, setOpenInfo] = useState(false)

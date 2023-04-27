@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View, TextInput, Pressable, FlatList } from 'react-native'
+import { StyleSheet, Text, View, TextInput, FlatList } from 'react-native'
 import React, { useState } from 'react'
 import  Icon from 'react-native-vector-icons/MaterialIcons'
 import { useFormik } from 'formik'
 
-export default function InputListAdd({data = [], onChangeData, eClose, width = 60, editable = true}) {
+export default function InputListAdd({data = [], onChangeData, width = 60, editable = true}) {
 
   const [openList, setOpenList] = useState(false)
 
@@ -11,7 +11,6 @@ export default function InputListAdd({data = [], onChangeData, eClose, width = 6
     initialValues: {item: ''},
     validateOnChange: false,
     onSubmit: (formValue) => {
-        console.log("aca", formValue)
     }
   })
 

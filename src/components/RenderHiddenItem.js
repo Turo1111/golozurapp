@@ -1,18 +1,16 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React from 'react'
 import { TouchableOpacity } from 'react-native';
 import DeleteIcon from 'react-native-vector-icons/AntDesign'
 import InputQty from './InputQty';
-import useCart from '../hooks/useCart';
 
-export default function RenderHiddenItem({item, rowClose, editQty, deleteItemCart}) {
+export default function RenderHiddenItem({item, rowClose, editQty}) {
 
     const [qty, setQty] = React.useState(item.cantidad)
 
     React.useEffect(()=>{
         !rowClose && setQty(item.cantidad)
         if (rowClose && qty !== item.cantidad) {
-            /* console.log('entro', qty, item.cantidad) */
             editQty({
                 ...item,
                 modificado: true,

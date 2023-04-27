@@ -14,7 +14,6 @@ export const AsyncStorageProvider = ({ children }) => {
     try {
       const jsonValue = JSON.stringify(value);
       await AsyncStorage.setItem('venta', jsonValue);
-      console.log('Data saved successfully');
       setData(value);
     } catch (e) {
       console.log('Failed to save data');
@@ -26,7 +25,6 @@ export const AsyncStorageProvider = ({ children }) => {
       const jsonValue = await AsyncStorage.getItem('venta');
       if (jsonValue !== null) {
         const value = JSON.parse(jsonValue);
-        console.log('Data retrieved successfully');
         setData(value);
         return value
       }
@@ -40,7 +38,6 @@ export const AsyncStorageProvider = ({ children }) => {
     try {
       await AsyncStorage.removeItem('venta');
       setData(undefined);
-      console.log('Data cleared successfully');
     } catch (e) {
       console.log('Failed to clear data');
     }

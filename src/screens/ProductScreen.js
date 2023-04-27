@@ -20,8 +20,6 @@ import useLocalStorage from '../hooks/useLocalStorage'
 
 const io = require('socket.io-client')
 
-const socket = io('https://gzapi.onrender.com')
-
 export default function ProductScreen() {
 
   const bottomSheet = useRef();
@@ -102,7 +100,7 @@ export default function ProductScreen() {
         
         <SwipeListView
           data={listProduct}
-          renderItem={({item})=><ProductCard {...item} onClick={()=>console.log(item)} />}
+          renderItem={({item})=><ProductCard {...item} onClick={()=>console.log()} />}
           ListEmptyComponent={
             <Text style={{textAlign: 'center', marginTop: 15, fontSize: 25, fontWeight: 'bold', color: '#c9c9c9'}} >No hay productos</Text>
           }

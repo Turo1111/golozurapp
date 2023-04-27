@@ -1,9 +1,8 @@
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
-import Navigation from './src/navigation/NavigationDrawer';
-import { LogBox, Text, Modal, View } from "react-native";
+import { LogBox } from "react-native";
 import { useFonts } from '@expo-google-fonts/inter';
-import { CartSaleContext, CartSaleProvider } from './src/context/CartSaleContext';
+import { CartSaleProvider } from './src/context/CartSaleContext';
 import Alert from './src/components/Alert';
 import { PackingSaleProvider } from './src/context/PackingSaleContext';
 import NavigationStack from './src/navigation/NavigationStack';

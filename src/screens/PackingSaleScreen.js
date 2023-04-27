@@ -1,10 +1,8 @@
-import { ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
-import ProductCard from './../components/ProductCard';
+import { StyleSheet, View } from 'react-native'
+import React from 'react'
 import Button from '../components/Button';
 import { usePacking } from '../context/PackingSaleContext';
 import PackingSaleCard from '../components/PackingSaleCard';
-import Loading from '../components/Loading';
 
 export default function PackingSaleScreen({navigation}) {
 

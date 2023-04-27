@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, Modal, Pressable, Dimensions, KeyboardAvoidingView, Keyboard  } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { StyleSheet, View, Modal, Pressable } from 'react-native'
+import React from 'react'
 
 export default function MyBottomSheet({children, open, onClose, fullScreen = false}) {
 

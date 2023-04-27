@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, ScrollView, Pressable, FlatList, TouchableHighlight } from 'react-native'
+import { StyleSheet, Text, View, Pressable, TouchableHighlight } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { usePacking } from '../context/PackingSaleContext'
 import MapView from 'react-native-maps'
@@ -11,7 +11,7 @@ import RenderHiddenItem from './RenderHiddenItem'
 
 export default function ShippingSaleCard({length}) {
 
-    const {indexPacking, saleActive, editQty, qtyMiss, qtyChange } = usePacking()
+    const {indexPacking, saleActive, editQty, qtyChange } = usePacking()
 
     const [rowClose, setRowClose] = React.useState(false)
     const [sheetProduct, setSheetProduct] = useState(false)

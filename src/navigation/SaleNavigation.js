@@ -2,8 +2,6 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack';
 import SaleScreen from './../screens/SaleScreen';
 import PackingSaleScreen from './../screens/PackingSaleScreen';
-import { Text } from 'react-native';
-import PackagingProcessSale from '../screens/ShippingSaleScreen';
 import ShippingSaleScreen from '../screens/ShippingSaleScreen';
 
 const Stack = createStackNavigator()

@@ -30,8 +30,6 @@ export default function InfoSale({info}) {
           return busqueda[item.idProducto];
         });
 
-        console.log(duplicados)
-
         isEnabled ? 
 
         setList(info?.lineaVenta.filter((item)=>{

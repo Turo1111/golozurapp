@@ -1,4 +1,4 @@
-import { Button, FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import Search from './Search'
 import useCart from '../hooks/useCart'

@@ -12,7 +12,6 @@ export const useDate = (dateConvert) => {
     var year = dateConvert ? dateConvert.getFullYear() : today.getFullYear();
     
     // muestra la fecha de hoy en formato `MM/DD/YYYY`
-    //console.log(`${month}/${day}/${year}`);
     const date = `${month}/${day}/${year}`
 
     return {date}

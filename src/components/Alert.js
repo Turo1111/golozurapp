@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Modal } from 'react-native'
-import React,{useState} from 'react'
+import React from 'react'
 import { useAlert } from '../context/AlertContext'
 
 export default function Alert() {

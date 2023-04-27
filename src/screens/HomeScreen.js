@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, SafeAreaView, TextInput, Dimensions, Pressable, FlatList, Modal } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Pressable, FlatList } from 'react-native'
 import Icon from 'react-native-vector-icons/Ionicons'
 import React, { useEffect, useState } from 'react'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
@@ -8,8 +8,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { Divider } from '@rneui/base';
 import { useAuth } from '../context/AuthContext';
 import { useAlert } from '../context/AlertContext'
-import axios from 'axios'/* 
-import useLocalStorage from '../hooks/useLocalStorage' */
+import axios from 'axios'
 import { useAsyncStorage } from '../context/AsyncStorageContext '
 import useLocalStorage from '../hooks/useLocalStorage'
 import Button from '../components/Button'

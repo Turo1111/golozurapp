@@ -2,7 +2,6 @@ import { StyleSheet, Text, View, TextInput, Pressable } from 'react-native'
 import React, {useEffect, useState} from 'react'
 import Button from './Button';
 import Modal from './Modal';
-import Search from './Search';
 import { FlatList } from 'react-native-gesture-handler';
 import { useFormik } from 'formik';
 import { useAlert } from '../context/AlertContext';
@@ -230,9 +229,6 @@ const ModalSearch = ({open, onClose, title, enlace, onChangeText}) => {
         socket.on('categoria', (categoria) => {
             setData((prevData)=>[...prevData, categoria])
         })
-        /* return () => {
-          socket.off('categoria', ()=>console.log('off'))
-        } */
       }, [])
 
 

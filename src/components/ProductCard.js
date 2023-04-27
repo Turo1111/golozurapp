@@ -1,9 +1,8 @@
-import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
-import { useFonts, Inter_900Black } from '@expo-google-fonts/inter';
+import { Pressable, StyleSheet, Text, View } from 'react-native'
+import React from 'react'
 import { usePacking } from '../context/PackingSaleContext';
 
-export default function ProductCard({_id, idProduct, descripcion, stock, peso, precioUnitario, sabor, categoria, cantidad, total, estado, onClick=()=>console.log("product card no tiene funcion"), cart, onLongPress}) {
+export default function ProductCard({_id, idProduct, descripcion, stock, peso, precioUnitario, sabor, categoria, cantidad, total, estado, onClick=()=>console.log(""), cart, onLongPress}) {
 
     const item = {_id, descripcion, stock, peso, precioUnitario, sabor}
 

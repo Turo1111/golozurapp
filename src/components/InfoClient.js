@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, Pressable, FlatList } from 'react-native'
-import React, {useState} from 'react'
+import { View, Text } from 'react-native'
+import React from 'react'
 import InputListAdd from './InputListAdd'
 
-export default function InfoClient({onClose, item}) {
+export default function InfoClient({item}) {
 
 
   return (

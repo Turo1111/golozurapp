@@ -1,8 +1,7 @@
-import { Pressable, ScrollView, StyleSheet, Text, TouchableHighlight, TouchableOpacity, View } from 'react-native'
+import { Pressable, ScrollView, StyleSheet, Text, TouchableHighlight, View } from 'react-native'
 import React from 'react'
 import { SwipeListView } from 'react-native-swipe-list-view';
 import ProductCard from './ProductCard';
-import Icon from 'react-native-vector-icons/Ionicons'
 import RenderHiddenItem from './RenderHiddenItem';
 import { usePacking } from '../context/PackingSaleContext';
 

@@ -11,13 +11,13 @@ export default function ModalFilterSale({openModal, onClose, filterActive, onFil
     const [showFrom, setShowFrom] = useState(false)
     const [showTo, setShowTo] = useState(false)
 
-    const onChangeFrom = (event, selectedDate) => {
+    const onChangeFrom = (selectedDate) => {
         const currentDate = selectedDate;
         setDateFrom(currentDate);
         setShowFrom(false);
     };
 
-    const onChangeTo = (event, selectedDate) => {
+    const onChangeTo = (selectedDate) => {
         const currentDate = selectedDate;
         setDateTo(currentDate);
         setShowTo(false);

@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TextInput, Pressable, FlatList } from 'react-na
 import React, { useState } from 'react'
 import  Icon from 'react-native-vector-icons/MaterialIcons'
 
-export default function InputSelect({data, value, onChangeText, eClose}) {
+export default function InputSelect({data, value, onChangeText}) {
 
   const [openList, setOpenList] = useState(false)
 

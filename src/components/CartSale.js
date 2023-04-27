@@ -1,10 +1,8 @@
-import { Button, FlatList, StyleSheet, Text, View } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
+import React, { useState } from 'react'
 import ProductCard from './ProductCard'
 import useCart from '../hooks/useCart'
 import { SwipeListView } from 'react-native-swipe-list-view'
-import { TouchableOpacity } from 'react-native';
-import InputQty from './InputQty'
 import RenderHiddenItem from './RenderHiddenItem'
 
 
@@ -19,7 +17,7 @@ export default function CartSale() {
       <SwipeListView
        data={cart}
        style={[styles.list, {paddingHorizontal: 10, marginVertical: 5}]}
-       renderItem={({item})=><ProductCard {...item} onClick={()=>console.log("cartsale productcard")} cart={true} />}
+       renderItem={({item})=><ProductCard {...item} onClick={()=>console.log("")} cart={true} />}
        renderHiddenItem={({item})=><RenderHiddenItem item={item} rowClose={rowClose} editQty={editQty} deleteItemCart={deleteItemCart} />}
        rightOpenValue={-200}
        leftOpenValue={78}

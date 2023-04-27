@@ -1,11 +1,9 @@
-import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import React, {useState, useEffect} from 'react'
-import { useFonts } from '@expo-google-fonts/inter';
 import { useNavigation } from '@react-navigation/native';
 import ListSale from '../components/ListSale';
 import Button from '../components/Button';
 import Search from '../components/Search';
-import FilterIcon from 'react-native-vector-icons/FontAwesome'
 import ModalFilterSale from '../components/ModalFilterSale';
 import { usePacking } from '../context/PackingSaleContext';
 import { useInputValue } from '../hooks/useInputValue';
@@ -25,7 +23,6 @@ export default function SaleScreen() {
     const [filterActive, setFilterActive] = React.useState('')
     const [filterSale, setFilterSale] = React.useState([])
     const [openModal, setOpenModal] = React.useState(false)
-    const [newSale, setNewSale] = useState(false)
     const [loading, setLoading] = useState(false)
     const {startPacking, startShipping} = usePacking()
     const search = useInputValue('','')
@@ -49,14 +46,11 @@ export default function SaleScreen() {
       .catch(function(error){
           console.log("get ",error);
       })
-    },[newSale])
-
-    /* useEffect(()=>console.log("lista sale 1",filterSale.length),[filterSale]) */
+    },[])
 
     useEffect(()=>{
       const socket = io('https://gzapi.onrender.com')
       socket.on('venta', (venta) => {
-        console.log(venta)
         setFilterSale((prevData)=>{
           const exist = prevData.find(elem => elem._id === venta._id )
           if (exist) {

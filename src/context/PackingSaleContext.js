@@ -1,4 +1,3 @@
-import { useNavigation } from '@react-navigation/native'
 import axios from 'axios'
 import React, { useState, createContext, useEffect, useContext } from 'react'
 import { useDate } from '../hooks/useDate'
@@ -103,7 +102,6 @@ export function PackingSaleProvider(props) {
         }
         else {
             changeSale(listSelected[indexPacking-1])
-            /* setSaleActive(listSelected[indexPacking-1]) */
             setIndexPacking(indexPacking-1)
         }
     }
@@ -160,7 +158,7 @@ export function PackingSaleProvider(props) {
         }
     }
 
-    const holdShipping = (navigation) => {
+    const holdShipping = () => {
         let result = listSelected.filter(elem => elem._id !== saleActive._id )
         result.splice(1,0,saleActive)
         setListSelected(result)
@@ -224,7 +222,6 @@ export function PackingSaleProvider(props) {
                             return item
                         }
                       })
-                      console.log("response filtrada",lv)
                     setSaleActive({...sale , lineaVenta: lv})
                 })
                 .catch(function(error){
